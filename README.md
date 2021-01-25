@@ -1,5 +1,11 @@
 # Shift Client SDK
 
+## Installation
+
+```sh
+npm i https://github.com/ShiftForex/shiftmarkets-sdk/tarball/v1.0.0
+```
+
 ## Code examples
 
 [Create orders and subscribe order updates](https://github.com/ShiftForex/shiftmarkets-sdk/blob/master/examples/create-orders-and-subscribe-order-updates.ts)
