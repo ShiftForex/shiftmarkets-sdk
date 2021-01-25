@@ -1,7 +1,7 @@
 {
-  "name": "@shiftforex/shiftmarkets-sdk",
-  "version": "3.2.6",
-  "description": "Shift Client SDK v2",
+  "name": "shiftmarkets-sdk",
+  "version": "1.0.0",
+  "description": "Shift Client SDK",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShiftForex/shift-markets-sdk"
+    "url": "git+https://github.com/ShiftForex/shiftmarkets-sdk"
   },
   "author": "Vadim L. Avramishin",
   "license": "ISC",
