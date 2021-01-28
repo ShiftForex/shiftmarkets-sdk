@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-npm i https://github.com/ShiftForex/shiftmarkets-sdk/tarball/v1.0.0
+npm i https://github.com/ShiftForex/shiftmarkets-sdk/tarball/v1.0.1
 ```
 
 ## Code examples
