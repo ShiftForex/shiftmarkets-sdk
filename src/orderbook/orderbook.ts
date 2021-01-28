@@ -5,7 +5,7 @@ import _round from "lodash.round";
 import { OrderbookRecord } from "./interfaces/orderbook-record.interface";
 import { VolumeWeightedAveragePrice } from "./interfaces/volume-weighted-average-price.interface";
 import { OrderbookUpdateDto } from "./dto/orderbook-update.dto";
-import { OrderSide, Sides } from "../trade/interfaces";
+import { OrderSide } from "../trade/interfaces";
 import { calculateQuoteVWAP, calculateVWAP } from "./utils/vwap";
 
 export class Orderbook {

@@ -6,8 +6,6 @@ import { fieldToDate } from "../common/field-to-date";
 import {
   Order,
   OrderSide,
-  OrderType,
-  OrderTimeInForce,
   OrderPagedFilter,
   MarketOrdersQc,
   InstantBuy,
