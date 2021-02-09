@@ -21,7 +21,7 @@ const _quoteVolumeVWAPReducer = (
     VWAP,
     filledVolume: filledVolume <= accumulator.volume ? filledVolume : accumulator.filledVolume,
     remainingVolume,
-    volume: accumulator.volume, // fixed
+    volume: accumulator.volume,
   };
 };
 
@@ -80,7 +80,8 @@ export const calculateQuoteVWAP = (
     volume,
   });
   return {
-    price: VWAP,
-    volume: filledVolume < volume ? filledVolume - remainingVolume : filledVolume,
+    price: isFinite(VWAP) ? VWAP : rows[0]?.price || 0,
+    volume: filledVolume,
+    remainingVolume,
   };
 };

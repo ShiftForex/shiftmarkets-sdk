@@ -51,6 +51,7 @@ exports.calculateVWAP = (rows, volume) => {
     };
 };
 exports.calculateQuoteVWAP = (rows, volume) => {
+    var _a;
     const { VWAP, filledVolume, remainingVolume } = rows.reduce(_quoteVolumeVWAPReducer, {
         VWAP: 0,
         filledVolume: 0,
@@ -58,8 +59,9 @@ exports.calculateQuoteVWAP = (rows, volume) => {
         volume,
     });
     return {
-        price: VWAP,
-        volume: filledVolume < volume ? filledVolume - remainingVolume : filledVolume,
+        price: isFinite(VWAP) ? VWAP : ((_a = rows[0]) === null || _a === void 0 ? void 0 : _a.price) || 0,
+        volume: filledVolume,
+        remainingVolume,
     };
 };
 //# sourceMappingURL=vwap.js.map

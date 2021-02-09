@@ -14,16 +14,16 @@ declare const _default: {
             netProduct: ProductType.base;
         };
         sell_quote_destination_account: {
-            amountProduct: ProductType;
+            amountProduct: ProductType.base;
             totalProduct: ProductType;
             feeProduct: ProductType;
-            netProduct: ProductType.base;
+            netProduct: ProductType;
         };
         buy_quote_destination_account: {
             amountProduct: ProductType;
-            totalProduct: ProductType;
+            totalProduct: ProductType.base;
             feeProduct: ProductType.base;
-            netProduct: ProductType;
+            netProduct: ProductType.base;
         };
         sell_quote_source_account: {
             amountProduct: ProductType;

@@ -80,13 +80,15 @@ export class OrderSummary {
     const baseVWAP = OrderHelperInstance.calculateVWAP(vwapAction, this.summary.orderBook, this.summary.amount);
     const VWAP = isQuote ? quoteVWAP : baseVWAP;
     this.summary.calculatedVWAP = VWAP.price;
-    this.summary.calculatedPrice = OrderHelperInstance.getPrice(this.summary.orderType, this.summary.calculatedVWAP, this.summary.limitPrice, this.summary.stopPrice);
+    this.summary.calculatedPrice = OrderHelperInstance.getPrice(this.summary.orderType, this.summary.calculatedVWAP, this.summary.limitPrice, this.summary.stopPrice) || 1;
 
     this.summary.calculatedAmount = OrderHelperInstance.calculateAmount(
       this.summary.action,
       this.summary.amount,
       this.summary.calculatedPrice,
-    );
+      this.summary.commissionAccount,
+      isQuote,
+    ) || 1;
 
     this.summary.calculatedFees = OrderHelperInstance.calculateFees(
       OrderHelperInstance.calculateTotal(

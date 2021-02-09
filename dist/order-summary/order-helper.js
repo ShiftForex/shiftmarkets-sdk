@@ -1,12 +1,24 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderHelper = void 0;
 const interfaces_1 = require("../trade/interfaces");
 const interfaces_2 = require("./interfaces");
 const vwap_1 = require("../orderbook/utils/vwap");
+const bignumber_js_1 = __importDefault(require("bignumber.js"));
 class OrderHelper {
     constructor() {
-        this.calculateVWAP = (action, orderBook, amount) => vwap_1.calculateVWAP(action === "sell" ? orderBook.asks : orderBook.bids, amount);
+        this.calculateVWAP = (action, _orderBook, amount) => {
+            var _a;
+            const orderBook = action === "sell" ? _orderBook.asks : _orderBook.bids;
+            const vwapResult = vwap_1.calculateVWAP(orderBook, amount);
+            return {
+                ...vwapResult,
+                price: isFinite(vwapResult.price) && vwapResult.price > 0 ? vwapResult.price : ((_a = orderBook[0]) === null || _a === void 0 ? void 0 : _a.price) || 0
+            };
+        };
         this.calculateQuoteQuantityVWAP = (orderBook, action, quoteQuantity) => vwap_1.calculateQuoteVWAP(action === "sell" ? orderBook.asks : orderBook.bids, quoteQuantity);
         this.getPrice = (orderType, calculatedVWAP, limitPrice, stopPrice) => {
             const prices = {
@@ -18,12 +30,32 @@ class OrderHelper {
             return prices[orderType];
         };
         this.amountOnPrice = (amount, calculatedPrice) => amount * calculatedPrice;
-        this.calculateAmount = (action, amount, calculatedPrice) => {
+        this.calculateAmount = (action, amount, calculatedPrice, commissionAccount, isSinglePrice = false) => {
+            const base = interfaces_1.ProductType.base;
+            const quote = interfaces_1.ProductType.quote;
             const amounts = {
-                [interfaces_1.Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
-                [interfaces_1.Sides.Sell]: amount,
+                [interfaces_2.AccountType.destinationAccount]: {
+                    [base]: {
+                        [interfaces_1.Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
+                        [interfaces_1.Sides.Sell]: amount,
+                    },
+                    [quote]: {
+                        [interfaces_1.Sides.Buy]: amount,
+                        [interfaces_1.Sides.Sell]: amount / calculatedPrice,
+                    },
+                },
+                [interfaces_2.AccountType.sourceAccount]: {
+                    [base]: {
+                        [interfaces_1.Sides.Buy]: amount,
+                        [interfaces_1.Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
+                    },
+                    [quote]: {
+                        [interfaces_1.Sides.Buy]: amount / calculatedPrice,
+                        [interfaces_1.Sides.Sell]: amount,
+                    },
+                }
             };
-            return amounts[action];
+            return amounts[commissionAccount][isSinglePrice ? quote : base][action];
         };
         this.calculateNet = (action, commissionAccount, amount, calculatedPrice, calculatedFees, isQuote) => {
             const base = interfaces_1.ProductType.base;
@@ -31,7 +63,7 @@ class OrderHelper {
             const nets = {
                 [interfaces_2.AccountType.sourceAccount]: {
                     [base]: {
-                        [interfaces_1.Sides.Buy]: amount,
+                        [interfaces_1.Sides.Buy]: this.amountOnPrice(amount, calculatedPrice) + calculatedFees,
                         [interfaces_1.Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
                     },
                     [quote]: {
@@ -45,8 +77,8 @@ class OrderHelper {
                         [interfaces_1.Sides.Sell]: this.amountOnPrice(amount, calculatedPrice) - calculatedFees,
                     },
                     [quote]: {
-                        [interfaces_1.Sides.Buy]: amount - calculatedFees * calculatedPrice,
-                        [interfaces_1.Sides.Sell]: (amount - calculatedFees) / calculatedPrice,
+                        [interfaces_1.Sides.Buy]: amount / calculatedPrice - calculatedFees,
+                        [interfaces_1.Sides.Sell]: amount - calculatedFees,
                     },
                 },
             };
@@ -76,37 +108,51 @@ class OrderHelper {
                 (action === interfaces_1.Sides.Sell && ask >= price)) {
                 method = interfaces_2.FeeType.taker;
             }
-            let feeAmount = 0;
+            let feeAmount = new bignumber_js_1.default(0);
             if (!fee) {
-                return feeAmount;
+                return feeAmount.toNumber();
             }
             if (method === interfaces_2.FeeType.maker) {
                 if (fee.makerProgressive) {
-                    feeAmount = this.calculateFee(fee.progressiveMethod, fee.makerProgressive, total);
+                    feeAmount = feeAmount.plus(new bignumber_js_1.default(this.calculateFee(fee.progressiveMethod, fee.makerProgressive, total)));
                 }
                 if (fee.makerFlat) {
-                    feeAmount += this.calculateFee(fee.flatMethod, fee.makerFlat, total);
+                    feeAmount = feeAmount.plus(new bignumber_js_1.default(this.calculateFee(fee.flatMethod, fee.makerFlat, total)));
                 }
             }
             else {
                 if (fee.takerProgressive) {
-                    feeAmount = this.calculateFee(fee.progressiveMethod, fee.takerProgressive, total);
+                    feeAmount = feeAmount.plus(new bignumber_js_1.default(this.calculateFee(fee.progressiveMethod, fee.takerProgressive, total)));
                 }
                 if (fee.takerFlat) {
-                    feeAmount += this.calculateFee(fee.flatMethod, fee.takerFlat, total);
+                    feeAmount = feeAmount.plus(new bignumber_js_1.default(this.calculateFee(fee.flatMethod, fee.takerFlat, total)));
                 }
             }
-            if (action === interfaces_1.Sides.Buy &&
-                isQuote &&
-                commissionAccount !== interfaces_2.AccountType.sourceAccount) {
-                return feeAmount * (1 / price);
-            }
-            if (action === interfaces_1.Sides.Sell &&
-                isQuote &&
-                commissionAccount === interfaces_2.AccountType.sourceAccount) {
-                return feeAmount * (1 / price);
-            }
-            return feeAmount;
+            const base = interfaces_1.ProductType.base;
+            const quote = interfaces_1.ProductType.quote;
+            const resultTypes = {
+                [interfaces_2.AccountType.sourceAccount]: {
+                    [base]: {
+                        [interfaces_1.Sides.Buy]: feeAmount.multipliedBy(new bignumber_js_1.default(price)),
+                        [interfaces_1.Sides.Sell]: feeAmount,
+                    },
+                    [quote]: {
+                        [interfaces_1.Sides.Buy]: feeAmount.multipliedBy(new bignumber_js_1.default(price)),
+                        [interfaces_1.Sides.Sell]: feeAmount // todo check it
+                    },
+                },
+                [interfaces_2.AccountType.destinationAccount]: {
+                    [base]: {
+                        [interfaces_1.Sides.Buy]: feeAmount,
+                        [interfaces_1.Sides.Sell]: feeAmount,
+                    },
+                    [quote]: {
+                        [interfaces_1.Sides.Buy]: feeAmount,
+                        [interfaces_1.Sides.Sell]: feeAmount,
+                    },
+                },
+            };
+            return Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(10));
         };
         this.calculateTotal = (action, commissionAccount, amount, calculatedPrice, calculatedFees, isQuote) => {
             const base = interfaces_1.ProductType.base;
@@ -114,14 +160,12 @@ class OrderHelper {
             const totals = {
                 [interfaces_2.AccountType.sourceAccount]: {
                     [base]: {
-                        [interfaces_1.Sides.Buy]: this.calculateAmount(action, amount, calculatedPrice) +
-                            calculatedFees,
-                        [interfaces_1.Sides.Sell]: this.calculateAmount(action, amount, calculatedPrice) +
-                            calculatedFees,
+                        [interfaces_1.Sides.Buy]: this.amountOnPrice(amount, calculatedPrice) + calculatedFees,
+                        [interfaces_1.Sides.Sell]: amount + calculatedFees,
                     },
                     [quote]: {
-                        [interfaces_1.Sides.Buy]: amount,
-                        [interfaces_1.Sides.Sell]: amount,
+                        [interfaces_1.Sides.Buy]: amount + calculatedFees,
+                        [interfaces_1.Sides.Sell]: amount / calculatedPrice + calculatedFees,
                     },
                 },
                 [interfaces_2.AccountType.destinationAccount]: {
@@ -130,7 +174,7 @@ class OrderHelper {
                         [interfaces_1.Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
                     },
                     [quote]: {
-                        [interfaces_1.Sides.Buy]: amount,
+                        [interfaces_1.Sides.Buy]: amount / calculatedPrice,
                         [interfaces_1.Sides.Sell]: amount,
                     },
                 },

@@ -1,39 +1,32 @@
-import {
-  OrderType,
-  Sides,
-  OrderSide,
-  Types,
-  ProductType,
-} from "../trade/interfaces";
-import {
-  AccountType,
-  BidAskValues,
-  InstrumentFee,
-  IOrderBook,
-  FeeCalculationMethod,
-  FeeType,
-  Fee,
-} from "./interfaces";
-import { Orderbook } from "../orderbook/orderbook";
-import { calculateQuoteVWAP, calculateVWAP } from "../orderbook/utils/vwap";
-import { VolumeWeightedAveragePrice } from "../orderbook/interfaces/volume-weighted-average-price.interface";
+import {OrderSide, OrderType, ProductType, Sides, Types,} from "../trade/interfaces";
+import {AccountType, BidAskValues, Fee, FeeCalculationMethod, FeeType, InstrumentFee, IOrderBook,} from "./interfaces";
+import {Orderbook} from "../orderbook/orderbook";
+import {calculateQuoteVWAP, calculateVWAP} from "../orderbook/utils/vwap";
+import {VolumeWeightedAveragePrice} from "../orderbook/interfaces/volume-weighted-average-price.interface";
+import BigNumber from "bignumber.js";
 
 export class OrderHelper {
   calculateVWAP = (
     action: OrderSide,
-    orderBook: IOrderBook,
+    _orderBook: IOrderBook,
     amount: number
-  ): VolumeWeightedAveragePrice =>
-    calculateVWAP(action === "sell" ? orderBook.asks : orderBook.bids, amount);
+  ): VolumeWeightedAveragePrice => {
+    const orderBook = action === "sell" ? _orderBook.asks : _orderBook.bids;
+    const vwapResult = calculateVWAP(orderBook, amount);
+    return {
+      ...vwapResult,
+      price: isFinite(vwapResult.price) && vwapResult.price > 0 ? vwapResult.price : orderBook[0]?.price || 0
+    }
+  }
+
 
   calculateQuoteQuantityVWAP = (
     orderBook: IOrderBook,
     action: OrderSide,
     quoteQuantity: number
-  ): VolumeWeightedAveragePrice =>
-    calculateQuoteVWAP(
-      action === "sell" ? orderBook.asks : orderBook.bids,
-      quoteQuantity
+  ): VolumeWeightedAveragePrice => calculateQuoteVWAP(
+        action === "sell" ? orderBook.asks : orderBook.bids,
+        quoteQuantity
     );
 
   getPrice = (
@@ -57,13 +50,35 @@ export class OrderHelper {
   calculateAmount = (
     action: OrderSide,
     amount: number,
-    calculatedPrice: number
+    calculatedPrice: number,
+    commissionAccount: AccountType,
+    isSinglePrice: boolean = false,
   ): number => {
+    const base = ProductType.base;
+    const quote = ProductType.quote;
     const amounts = {
-      [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
-      [Sides.Sell]: amount,
+      [AccountType.destinationAccount]: {
+        [base]: {
+          [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
+          [Sides.Sell]: amount,
+        },
+        [quote]: {
+          [Sides.Buy]: amount,
+          [Sides.Sell]: amount / calculatedPrice,
+        },
+      },
+      [AccountType.sourceAccount]: {
+        [base]: {
+          [Sides.Buy]: amount,
+          [Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
+        },
+        [quote]: {
+          [Sides.Buy]: amount / calculatedPrice,
+          [Sides.Sell]: amount,
+        },
+      }
     };
-    return amounts[action];
+    return amounts[commissionAccount][isSinglePrice ? quote : base][action];
   };
 
   calculateNet = (
@@ -79,7 +94,7 @@ export class OrderHelper {
     const nets = {
       [AccountType.sourceAccount]: {
         [base]: {
-          [Sides.Buy]: amount,
+          [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice) + calculatedFees,
           [Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
         },
         [quote]: {
@@ -94,8 +109,8 @@ export class OrderHelper {
             this.amountOnPrice(amount, calculatedPrice) - calculatedFees,
         },
         [quote]: {
-          [Sides.Buy]: amount - calculatedFees * calculatedPrice, // calculate fees as base
-          [Sides.Sell]: (amount - calculatedFees) / calculatedPrice, // base / base
+          [Sides.Buy]: amount / calculatedPrice - calculatedFees, // calculate fees as base // todo check it
+          [Sides.Sell]: amount - calculatedFees, // base / base // todo check it
         },
       },
     };
@@ -147,50 +162,77 @@ export class OrderHelper {
       method = FeeType.taker;
     }
 
-    let feeAmount: number = 0;
+    let feeAmount: BigNumber = new BigNumber(0);
     if (!fee) {
-      return feeAmount;
+      return feeAmount.toNumber();
     }
 
     if (method === FeeType.maker) {
       if (fee.makerProgressive) {
-        feeAmount = this.calculateFee(
-          fee.progressiveMethod,
-          fee.makerProgressive,
-          total
+        feeAmount = feeAmount.plus(
+          new BigNumber(this.calculateFee(
+            fee.progressiveMethod,
+            fee.makerProgressive,
+            total
+          ))
         );
       }
       if (fee.makerFlat) {
-        feeAmount += this.calculateFee(fee.flatMethod, fee.makerFlat, total);
+        feeAmount = feeAmount.plus(
+            new BigNumber(this.calculateFee(
+                fee.flatMethod,
+                fee.makerFlat,
+                total
+            ))
+        );
       }
     } else {
       if (fee.takerProgressive) {
-        feeAmount = this.calculateFee(
-          fee.progressiveMethod,
-          fee.takerProgressive,
-          total
+        feeAmount = feeAmount.plus(
+            new BigNumber(this.calculateFee(
+                fee.progressiveMethod,
+                fee.takerProgressive,
+                total
+            ))
         );
       }
       if (fee.takerFlat) {
-        feeAmount += this.calculateFee(fee.flatMethod, fee.takerFlat, total);
+        feeAmount = feeAmount.plus(
+            new BigNumber(this.calculateFee(
+                fee.flatMethod,
+                fee.takerFlat,
+                total
+            ))
+        );
       }
     }
 
-    if (
-      action === Sides.Buy &&
-      isQuote &&
-      commissionAccount !== AccountType.sourceAccount
-    ) {
-      return feeAmount * (1 / price);
-    }
-    if (
-      action === Sides.Sell &&
-      isQuote &&
-      commissionAccount === AccountType.sourceAccount
-    ) {
-      return feeAmount * (1 / price);
-    }
-    return feeAmount;
+    const base = ProductType.base;
+    const quote = ProductType.quote;
+    const resultTypes = {
+      [AccountType.sourceAccount]: {
+        [base]: {
+          [Sides.Buy]: feeAmount.multipliedBy(new BigNumber(price)),
+          [Sides.Sell]: feeAmount,
+        },
+        [quote]: {
+          [Sides.Buy]: feeAmount.multipliedBy(new BigNumber(price)), // todo check it
+          [Sides.Sell]: feeAmount // todo check it
+        },
+      },
+      [AccountType.destinationAccount]: {
+        [base]: {
+          [Sides.Buy]: feeAmount,
+          [Sides.Sell]: feeAmount,
+        },
+        [quote]: {
+          [Sides.Buy]: feeAmount,
+          [Sides.Sell]: feeAmount,
+        },
+      },
+    };
+
+    return Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(10));
   };
 
   calculateTotal = (
@@ -206,16 +248,12 @@ export class OrderHelper {
     const totals = {
       [AccountType.sourceAccount]: {
         [base]: {
-          [Sides.Buy]:
-            this.calculateAmount(action, amount, calculatedPrice) +
-            calculatedFees,
-          [Sides.Sell]:
-            this.calculateAmount(action, amount, calculatedPrice) +
-            calculatedFees,
+          [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice) + calculatedFees,
+          [Sides.Sell]: amount + calculatedFees,
         },
         [quote]: {
-          [Sides.Buy]: amount,
-          [Sides.Sell]: amount,
+          [Sides.Buy]: amount + calculatedFees,
+          [Sides.Sell]: amount / calculatedPrice + calculatedFees,
         },
       },
       [AccountType.destinationAccount]: {
@@ -224,7 +262,7 @@ export class OrderHelper {
           [Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
         },
         [quote]: {
-          [Sides.Buy]: amount,
+          [Sides.Buy]: amount / calculatedPrice,
           [Sides.Sell]: amount,
         },
       },
@@ -255,6 +293,7 @@ export interface IOrderHelper {
     action: OrderSide,
     amount: number,
     calculatedPrice: number,
+    commissionAccount: AccountType,
     isSinglePrice?: boolean
   ) => number;
   calculateNet: (
