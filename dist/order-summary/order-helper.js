@@ -10,6 +10,7 @@ const vwap_1 = require("../orderbook/utils/vwap");
 const bignumber_js_1 = __importDefault(require("bignumber.js"));
 class OrderHelper {
     constructor() {
+        this.checkIfFinite = (value) => isFinite(value) ? value : 0;
         this.calculateVWAP = (action, _orderBook, amount) => {
             var _a;
             const orderBook = action === "sell" ? _orderBook.asks : _orderBook.bids;
@@ -29,7 +30,7 @@ class OrderHelper {
             };
             return prices[orderType];
         };
-        this.amountOnPrice = (amount, calculatedPrice) => amount * calculatedPrice;
+        this.amountOnPrice = (amount, calculatedPrice) => this.checkIfFinite(amount * calculatedPrice);
         this.calculateAmount = (action, amount, calculatedPrice, commissionAccount, isSinglePrice = false) => {
             const base = interfaces_1.ProductType.base;
             const quote = interfaces_1.ProductType.quote;
@@ -55,7 +56,7 @@ class OrderHelper {
                     },
                 }
             };
-            return amounts[commissionAccount][isSinglePrice ? quote : base][action];
+            return this.checkIfFinite(amounts[commissionAccount][isSinglePrice ? quote : base][action]);
         };
         this.calculateNet = (action, commissionAccount, amount, calculatedPrice, calculatedFees, isQuote) => {
             const base = interfaces_1.ProductType.base;
@@ -63,11 +64,11 @@ class OrderHelper {
             const nets = {
                 [interfaces_2.AccountType.sourceAccount]: {
                     [base]: {
-                        [interfaces_1.Sides.Buy]: this.amountOnPrice(amount, calculatedPrice) + calculatedFees,
-                        [interfaces_1.Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
+                        [interfaces_1.Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
+                        [interfaces_1.Sides.Sell]: amount,
                     },
                     [quote]: {
-                        [interfaces_1.Sides.Buy]: amount - calculatedFees,
+                        [interfaces_1.Sides.Buy]: amount,
                         [interfaces_1.Sides.Sell]: amount / calculatedPrice - calculatedFees,
                     },
                 },
@@ -82,7 +83,7 @@ class OrderHelper {
                     },
                 },
             };
-            return nets[commissionAccount][isQuote ? quote : base][action];
+            return this.checkIfFinite(nets[commissionAccount][isQuote ? quote : base][action]);
         };
         this.calculateFee = (method, fee, amount) => {
             const fees = {
@@ -133,12 +134,12 @@ class OrderHelper {
             const resultTypes = {
                 [interfaces_2.AccountType.sourceAccount]: {
                     [base]: {
-                        [interfaces_1.Sides.Buy]: feeAmount.multipliedBy(new bignumber_js_1.default(price)),
+                        [interfaces_1.Sides.Buy]: feeAmount,
                         [interfaces_1.Sides.Sell]: feeAmount,
                     },
                     [quote]: {
-                        [interfaces_1.Sides.Buy]: feeAmount.multipliedBy(new bignumber_js_1.default(price)),
-                        [interfaces_1.Sides.Sell]: feeAmount // todo check it
+                        [interfaces_1.Sides.Buy]: feeAmount,
+                        [interfaces_1.Sides.Sell]: feeAmount,
                     },
                 },
                 [interfaces_2.AccountType.destinationAccount]: {
@@ -152,7 +153,7 @@ class OrderHelper {
                     },
                 },
             };
-            return Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(10));
+            return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(10)));
         };
         this.calculateTotal = (action, commissionAccount, amount, calculatedPrice, calculatedFees, isQuote) => {
             const base = interfaces_1.ProductType.base;
@@ -179,7 +180,7 @@ class OrderHelper {
                     },
                 },
             };
-            return totals[commissionAccount][isQuote ? quote : base][action];
+            return this.checkIfFinite(totals[commissionAccount][isQuote ? quote : base][action]);
         };
     }
 }

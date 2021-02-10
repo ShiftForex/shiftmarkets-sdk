@@ -6,6 +6,8 @@ import {VolumeWeightedAveragePrice} from "../orderbook/interfaces/volume-weighte
 import BigNumber from "bignumber.js";
 
 export class OrderHelper {
+  checkIfFinite = (value: number) => isFinite(value) ? value : 0;
+
   calculateVWAP = (
     action: OrderSide,
     _orderBook: IOrderBook,
@@ -18,7 +20,6 @@ export class OrderHelper {
       price: isFinite(vwapResult.price) && vwapResult.price > 0 ? vwapResult.price : orderBook[0]?.price || 0
     }
   }
-
 
   calculateQuoteQuantityVWAP = (
     orderBook: IOrderBook,
@@ -45,7 +46,7 @@ export class OrderHelper {
   };
 
   amountOnPrice = (amount: number, calculatedPrice: number): number =>
-    amount * calculatedPrice;
+      this.checkIfFinite(amount * calculatedPrice);
 
   calculateAmount = (
     action: OrderSide,
@@ -78,7 +79,7 @@ export class OrderHelper {
         },
       }
     };
-    return amounts[commissionAccount][isSinglePrice ? quote : base][action];
+    return this.checkIfFinite(amounts[commissionAccount][isSinglePrice ? quote : base][action]);
   };
 
   calculateNet = (
@@ -94,11 +95,11 @@ export class OrderHelper {
     const nets = {
       [AccountType.sourceAccount]: {
         [base]: {
-          [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice) + calculatedFees,
-          [Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
+          [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
+          [Sides.Sell]: amount,
         },
         [quote]: {
-          [Sides.Buy]: amount - calculatedFees, // amount is base
+          [Sides.Buy]: amount, // amount is base
           [Sides.Sell]: amount / calculatedPrice - calculatedFees, // base / base
         },
       },
@@ -115,7 +116,7 @@ export class OrderHelper {
       },
     };
 
-    return nets[commissionAccount][isQuote ? quote : base][action];
+    return this.checkIfFinite(nets[commissionAccount][isQuote ? quote : base][action]);
   };
 
   calculateFee = (
@@ -212,12 +213,12 @@ export class OrderHelper {
     const resultTypes = {
       [AccountType.sourceAccount]: {
         [base]: {
-          [Sides.Buy]: feeAmount.multipliedBy(new BigNumber(price)),
+          [Sides.Buy]: feeAmount,
           [Sides.Sell]: feeAmount,
         },
         [quote]: {
-          [Sides.Buy]: feeAmount.multipliedBy(new BigNumber(price)), // todo check it
-          [Sides.Sell]: feeAmount // todo check it
+          [Sides.Buy]: feeAmount,
+          [Sides.Sell]: feeAmount,
         },
       },
       [AccountType.destinationAccount]: {
@@ -232,7 +233,7 @@ export class OrderHelper {
       },
     };
 
-    return Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(10));
+    return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(10)));
   };
 
   calculateTotal = (
@@ -267,7 +268,7 @@ export class OrderHelper {
         },
       },
     };
-    return totals[commissionAccount][isQuote ? quote : base][action];
+    return this.checkIfFinite(totals[commissionAccount][isQuote ? quote : base][action]);
   };
 }
 

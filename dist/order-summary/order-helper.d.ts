@@ -3,6 +3,7 @@ import { AccountType, BidAskValues, FeeCalculationMethod, InstrumentFee, IOrderB
 import { Orderbook } from "../orderbook/orderbook";
 import { VolumeWeightedAveragePrice } from "../orderbook/interfaces/volume-weighted-average-price.interface";
 export declare class OrderHelper {
+    checkIfFinite: (value: number) => number;
     calculateVWAP: (action: OrderSide, _orderBook: IOrderBook, amount: number) => VolumeWeightedAveragePrice;
     calculateQuoteQuantityVWAP: (orderBook: IOrderBook, action: OrderSide, quoteQuantity: number) => VolumeWeightedAveragePrice;
     getPrice: (orderType: OrderType, calculatedVWAP: number, limitPrice: number, stopPrice: number) => number;

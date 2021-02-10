@@ -88,7 +88,7 @@ export class OrderSummary {
       this.summary.calculatedPrice,
       this.summary.commissionAccount,
       isQuote,
-    ) || 1;
+    );
 
     this.summary.calculatedFees = OrderHelperInstance.calculateFees(
       OrderHelperInstance.calculateTotal(

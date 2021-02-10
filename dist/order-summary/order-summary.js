@@ -76,7 +76,7 @@ class OrderSummary {
         const VWAP = isQuote ? quoteVWAP : baseVWAP;
         this.summary.calculatedVWAP = VWAP.price;
         this.summary.calculatedPrice = OrderHelperInstance.getPrice(this.summary.orderType, this.summary.calculatedVWAP, this.summary.limitPrice, this.summary.stopPrice) || 1;
-        this.summary.calculatedAmount = OrderHelperInstance.calculateAmount(this.summary.action, this.summary.amount, this.summary.calculatedPrice, this.summary.commissionAccount, isQuote) || 1;
+        this.summary.calculatedAmount = OrderHelperInstance.calculateAmount(this.summary.action, this.summary.amount, this.summary.calculatedPrice, this.summary.commissionAccount, isQuote);
         this.summary.calculatedFees = OrderHelperInstance.calculateFees(OrderHelperInstance.calculateTotal(this.summary.action, this.summary.commissionAccount, this.summary.amount, this.summary.calculatedPrice, this.summary.calculatedFees, isQuote), this.summary.calculatedPrice, this.summary.fees, this.summary.orderType, this.summary.action, this.summary.bidAsk, this.summary.commissionAccount, isQuote);
         this.summary.calculatedTotal = OrderHelperInstance.calculateTotal(this.summary.action, this.summary.commissionAccount, this.summary.amount, this.summary.calculatedPrice, this.summary.calculatedFees, isQuote);
         this.summary.calculatedNet = OrderHelperInstance.calculateNet(this.summary.action, this.summary.commissionAccount, this.summary.amount, this.summary.calculatedPrice, this.summary.calculatedFees, isQuote);
