@@ -20,6 +20,9 @@ const defaultBaseDecimals: number = config.products && config.defaultDecimals
   ? config.defaultDecimals.crypto
   : 5;
 
+/**
+ * https://docs.google.com/document/d/1XFA8Vj2qzqHuUKthFV0c6Vz3p96WCCcqtv1AhmYIKPY/edit
+ */
 export class OrderSummary {
   summary: OrderSummaryProperties | any = {
     amount: 0,

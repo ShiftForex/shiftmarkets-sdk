@@ -5,20 +5,18 @@ import {
 import { VolumeWeightedAveragePrice } from "../interfaces/volume-weighted-average-price.interface";
 
 const _quoteVolumeVWAPReducer = (
-  accumulator: QuoteVWAPAccumulator,
-  layer: { price: number; volume: number }
+    accumulator: QuoteVWAPAccumulator,
+    layer: { price: number; volume: number }
 ) => {
   const layerVolume = Math.min(
-    +accumulator.remainingVolume,
-    layer.price * layer.volume
-  ) || 1;
+      +accumulator.remainingVolume,
+      layer.price * layer.volume
+  ) || 0;
   let filledVolume = accumulator.filledVolume + layerVolume;
   const remainingVolume = accumulator.remainingVolume - layerVolume;
-  const VWAP = (accumulator.VWAP * accumulator.filledVolume +
-    layer.price * layerVolume) /
-    (accumulator.filledVolume + layerVolume);
+  const VWAP = ((accumulator.VWAP * accumulator.filledVolume + layer.price * layerVolume) || 1) / ((accumulator.filledVolume + layerVolume) || 1) || 0;
   return {
-    VWAP,
+    VWAP: VWAP > 0 ? VWAP : accumulator.VWAP,
     filledVolume: filledVolume <= accumulator.volume ? filledVolume : accumulator.filledVolume,
     remainingVolume,
     volume: accumulator.volume,
@@ -26,8 +24,8 @@ const _quoteVolumeVWAPReducer = (
 };
 
 export const calculateVWAP = (
-  rows: OrderbookRecord[],
-  volume: number
+    rows: OrderbookRecord[],
+    volume: number
 ): VolumeWeightedAveragePrice => {
   if (volume <= 0) {
     return {
@@ -39,7 +37,7 @@ export const calculateVWAP = (
   let selectedRows: OrderbookRecord[] = [];
 
   for (let i = 0; i < rows.length; i++) {
-    let row = rows[i];
+    let row = { ...rows[i] };
 
     if (sumVolume >= volume) {
       break;
@@ -70,11 +68,11 @@ export const calculateVWAP = (
 };
 
 export const calculateQuoteVWAP = (
-  rows: OrderbookRecord[],
-  volume: number
+    rows: OrderbookRecord[],
+    volume: number
 ): VolumeWeightedAveragePrice => {
   const { VWAP, filledVolume, remainingVolume } = rows.reduce(_quoteVolumeVWAPReducer, {
-    VWAP: 0,
+    VWAP: 1,
     filledVolume: 0,
     remainingVolume: volume,
     volume,

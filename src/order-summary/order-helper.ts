@@ -5,6 +5,9 @@ import {calculateQuoteVWAP, calculateVWAP} from "../orderbook/utils/vwap";
 import {VolumeWeightedAveragePrice} from "../orderbook/interfaces/volume-weighted-average-price.interface";
 import BigNumber from "bignumber.js";
 
+/**
+ * https://docs.google.com/document/d/1XFA8Vj2qzqHuUKthFV0c6Vz3p96WCCcqtv1AhmYIKPY/edit
+ */
 export class OrderHelper {
   checkIfFinite = (value: number) => isFinite(value) ? value : 0;
 
@@ -99,8 +102,8 @@ export class OrderHelper {
           [Sides.Sell]: amount,
         },
         [quote]: {
-          [Sides.Buy]: amount, // amount is base
-          [Sides.Sell]: amount / calculatedPrice - calculatedFees, // base / base
+          [Sides.Buy]: amount,
+          [Sides.Sell]: amount / calculatedPrice - calculatedFees,
         },
       },
       [AccountType.destinationAccount]: {
@@ -110,8 +113,8 @@ export class OrderHelper {
             this.amountOnPrice(amount, calculatedPrice) - calculatedFees,
         },
         [quote]: {
-          [Sides.Buy]: amount / calculatedPrice - calculatedFees, // calculate fees as base // todo check it
-          [Sides.Sell]: amount - calculatedFees, // base / base // todo check it
+          [Sides.Buy]: amount / calculatedPrice - calculatedFees,
+          [Sides.Sell]: amount - calculatedFees,
         },
       },
     };
