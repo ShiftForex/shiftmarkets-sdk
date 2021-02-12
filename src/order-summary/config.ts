@@ -28,12 +28,12 @@ export default {
     },
     sell_quote_source_account: {
       amountProduct: quote,
-      totalProduct: quote,
+      totalProduct: base,
       feeProduct: base,
       netProduct: base,
     },
     buy_quote_source_account: {
-      amountProduct: quote,
+      amountProduct: base,
       totalProduct: quote,
       feeProduct: quote,
       netProduct: quote,
@@ -51,16 +51,16 @@ export default {
       netProduct: base,
     },
     sell_base_source_account: {
-      amountProduct: base,
+      amountProduct: quote,
       totalProduct: base,
       feeProduct: base,
       netProduct: quote,
     },
     buy_base_source_account: {
-      amountProduct: quote,
+      amountProduct: base,
       totalProduct: quote,
       feeProduct: quote,
-      netProduct: base,
+      netProduct: quote,
     },
   },
   products: {

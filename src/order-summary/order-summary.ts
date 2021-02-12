@@ -41,8 +41,8 @@ export class OrderSummary {
     this.summary.fees = orderSummary.fees;
     this.summary.bidAsk = orderSummary.bidAsk || { bid: 0, ask: 0 };
     this.summary.orderBook = orderSummary.orderBook || { bids: [], asks: [] };
-    this.summary.limitPrice = orderSummary.limitPrice || 0;
-    this.summary.stopPrice = orderSummary.stopPrice || 0;
+    this.summary.limitPrice = orderSummary.limitPrice || this.getLimitPrice() || 0;
+    this.summary.stopPrice = orderSummary.stopPrice || this.getLimitPrice() || 0;
     this.summary.quote = orderSummary.quote || defaultQuote;
     this.summary.base = orderSummary.base || defaultBase;
     this.summary.quoteDecimals = orderSummary.quoteDecimals || defaultQuoteDecimals;
@@ -50,6 +50,31 @@ export class OrderSummary {
     this.summary.currentProduct = orderSummary.currentProduct;
     this._setProductsAndDecimals();
   }
+
+  public getLimitPrice(qty = 0) {
+    switch (this.summary.action) {
+      case Sides.Buy:
+        return this.summary.bidAsk.ask; // If buying, get ask price
+      case Sides.Sell:
+        let totalQty = 0;
+        let vwap = this.summary.orderBook.bids.reduce((accumulator: any, currentValue: any) => {
+          const currentQtyBalance = qty - totalQty;
+          const currentQty = currentValue.quantity * 1;
+          if (currentQtyBalance <= currentQty) {
+            totalQty = qty;
+            return accumulator + currentQtyBalance * currentValue.price;
+          }
+          totalQty += currentQty;
+          return accumulator + currentQty * currentValue.price;
+        }, 0);
+        if (totalQty < qty) {
+          vwap += (qty - totalQty) * this.summary.bidAsk.bid;
+        }
+        return vwap / qty || 0;
+      default:
+        return this.summary.bidAsk.bid; // Should not happen
+    }
+  };
 
   private _setProductsAndDecimals(): void {
     const base = ProductType.base;

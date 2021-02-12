@@ -57,8 +57,8 @@ export interface OrderSummaryPayload {
     fees: InstrumentFee;
     bidAsk: BidAskValues;
     orderBook: IOrderBook;
-    limitPrice: number;
-    stopPrice: number;
+    limitPrice?: number;
+    stopPrice?: number;
     quote: string;
     base: string;
     quoteDecimals: number;

@@ -8,6 +8,9 @@ const interfaces_1 = require("../trade/interfaces");
 const interfaces_2 = require("./interfaces");
 const vwap_1 = require("../orderbook/utils/vwap");
 const bignumber_js_1 = __importDefault(require("bignumber.js"));
+/**
+ * https://docs.google.com/document/d/1XFA8Vj2qzqHuUKthFV0c6Vz3p96WCCcqtv1AhmYIKPY/edit
+ */
 class OrderHelper {
     constructor() {
         this.checkIfFinite = (value) => isFinite(value) ? value : 0;
