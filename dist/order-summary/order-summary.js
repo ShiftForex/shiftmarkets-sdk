@@ -17,6 +17,9 @@ const defaultQuoteDecimals = config_1.default.products && config_1.default.defau
 const defaultBaseDecimals = config_1.default.products && config_1.default.defaultDecimals
     ? config_1.default.defaultDecimals.crypto
     : 5;
+/**
+ * https://docs.google.com/document/d/1XFA8Vj2qzqHuUKthFV0c6Vz3p96WCCcqtv1AhmYIKPY/edit
+ */
 class OrderSummary {
     constructor() {
         this.summary = {
@@ -36,8 +39,8 @@ class OrderSummary {
         this.summary.fees = orderSummary.fees;
         this.summary.bidAsk = orderSummary.bidAsk || { bid: 0, ask: 0 };
         this.summary.orderBook = orderSummary.orderBook || { bids: [], asks: [] };
-        this.summary.limitPrice = orderSummary.limitPrice || 0;
-        this.summary.stopPrice = orderSummary.stopPrice || 0;
+        this.summary.limitPrice = orderSummary.limitPrice || this.getLimitPrice() || 0;
+        this.summary.stopPrice = orderSummary.stopPrice || this.getLimitPrice() || 0;
         this.summary.quote = orderSummary.quote || defaultQuote;
         this.summary.base = orderSummary.base || defaultBase;
         this.summary.quoteDecimals = orderSummary.quoteDecimals || defaultQuoteDecimals;
@@ -45,6 +48,31 @@ class OrderSummary {
         this.summary.currentProduct = orderSummary.currentProduct;
         this._setProductsAndDecimals();
     }
+    getLimitPrice(qty = 0) {
+        switch (this.summary.action) {
+            case interfaces_2.Sides.Buy:
+                return this.summary.bidAsk.ask; // If buying, get ask price
+            case interfaces_2.Sides.Sell:
+                let totalQty = 0;
+                let vwap = this.summary.orderBook.bids.reduce((accumulator, currentValue) => {
+                    const currentQtyBalance = qty - totalQty;
+                    const currentQty = currentValue.quantity * 1;
+                    if (currentQtyBalance <= currentQty) {
+                        totalQty = qty;
+                        return accumulator + currentQtyBalance * currentValue.price;
+                    }
+                    totalQty += currentQty;
+                    return accumulator + currentQty * currentValue.price;
+                }, 0);
+                if (totalQty < qty) {
+                    vwap += (qty - totalQty) * this.summary.bidAsk.bid;
+                }
+                return vwap / qty || 0;
+            default:
+                return this.summary.bidAsk.bid; // Should not happen
+        }
+    }
+    ;
     _setProductsAndDecimals() {
         const base = interfaces_2.ProductType.base;
         const quote = interfaces_2.ProductType.quote;
@@ -75,8 +103,8 @@ class OrderSummary {
         const baseVWAP = OrderHelperInstance.calculateVWAP(vwapAction, this.summary.orderBook, this.summary.amount);
         const VWAP = isQuote ? quoteVWAP : baseVWAP;
         this.summary.calculatedVWAP = VWAP.price;
-        this.summary.calculatedPrice = OrderHelperInstance.getPrice(this.summary.orderType, this.summary.calculatedVWAP, this.summary.limitPrice, this.summary.stopPrice);
-        this.summary.calculatedAmount = OrderHelperInstance.calculateAmount(this.summary.action, this.summary.amount, this.summary.calculatedPrice);
+        this.summary.calculatedPrice = OrderHelperInstance.getPrice(this.summary.orderType, this.summary.calculatedVWAP, this.summary.limitPrice, this.summary.stopPrice) || 1;
+        this.summary.calculatedAmount = OrderHelperInstance.calculateAmount(this.summary.action, this.summary.amount, this.summary.calculatedPrice, this.summary.commissionAccount, isQuote);
         this.summary.calculatedFees = OrderHelperInstance.calculateFees(OrderHelperInstance.calculateTotal(this.summary.action, this.summary.commissionAccount, this.summary.amount, this.summary.calculatedPrice, this.summary.calculatedFees, isQuote), this.summary.calculatedPrice, this.summary.fees, this.summary.orderType, this.summary.action, this.summary.bidAsk, this.summary.commissionAccount, isQuote);
         this.summary.calculatedTotal = OrderHelperInstance.calculateTotal(this.summary.action, this.summary.commissionAccount, this.summary.amount, this.summary.calculatedPrice, this.summary.calculatedFees, isQuote);
         this.summary.calculatedNet = OrderHelperInstance.calculateNet(this.summary.action, this.summary.commissionAccount, this.summary.amount, this.summary.calculatedPrice, this.summary.calculatedFees, isQuote);
