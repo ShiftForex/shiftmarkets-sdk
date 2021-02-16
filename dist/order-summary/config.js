@@ -54,7 +54,7 @@ exports.default = {
             amountProduct: quote,
             totalProduct: base,
             feeProduct: base,
-            netProduct: quote,
+            netProduct: base,
         },
         buy_base_source_account: {
             amountProduct: base,

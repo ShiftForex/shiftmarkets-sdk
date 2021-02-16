@@ -103,7 +103,7 @@ export class OrderHelper {
         },
         [quote]: {
           [Sides.Buy]: amount,
-          [Sides.Sell]: amount / calculatedPrice - calculatedFees,
+          [Sides.Sell]: amount / calculatedPrice,
         },
       },
       [AccountType.destinationAccount]: {
@@ -142,7 +142,9 @@ export class OrderHelper {
     action: OrderSide,
     bidAsk: BidAskValues,
     commissionAccount: AccountType,
-    isQuote: boolean = false
+    isQuote: boolean = false,
+    shouldDivideFlat: boolean = false,
+    feeDecimals: number = 5,
   ): number => {
     const { bid, ask } = bidAsk;
 
@@ -170,6 +172,16 @@ export class OrderHelper {
     if (!fee) {
       return feeAmount.toNumber();
     }
+    /**
+     * Used in case if fee should be in BTC (base) so, flat price divided on BTC (base) price
+     * @param flatFee
+     */
+    const flatInBase = (flatFee: BigNumber) => {
+      if (shouldDivideFlat) {
+        return flatFee.dividedBy(price);
+      }
+      return flatFee;
+    }
 
     if (method === FeeType.maker) {
       if (fee.makerProgressive) {
@@ -183,30 +195,30 @@ export class OrderHelper {
       }
       if (fee.makerFlat) {
         feeAmount = feeAmount.plus(
-            new BigNumber(this.calculateFee(
-                fee.flatMethod,
-                fee.makerFlat,
-                total
-            ))
+          flatInBase(new BigNumber(this.calculateFee(
+            fee.flatMethod,
+            fee.makerFlat,
+            total
+          )))
         );
       }
     } else {
       if (fee.takerProgressive) {
         feeAmount = feeAmount.plus(
-            new BigNumber(this.calculateFee(
-                fee.progressiveMethod,
-                fee.takerProgressive,
-                total
-            ))
+          new BigNumber(this.calculateFee(
+            fee.progressiveMethod,
+            fee.takerProgressive,
+            total
+          ))
         );
       }
       if (fee.takerFlat) {
         feeAmount = feeAmount.plus(
-            new BigNumber(this.calculateFee(
-                fee.flatMethod,
-                fee.takerFlat,
-                total
-            ))
+          flatInBase(new BigNumber(this.calculateFee(
+            fee.flatMethod,
+            fee.takerFlat,
+            total
+          )))
         );
       }
     }
@@ -236,7 +248,7 @@ export class OrderHelper {
       },
     };
 
-    return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(10)));
+    return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(feeDecimals)));
   };
 
   calculateTotal = (
@@ -321,7 +333,9 @@ export interface IOrderHelper {
     action: OrderSide,
     bidAsk: BidAskValues,
     commissionAccount: AccountType,
-    isQuote: boolean
+    isQuote: boolean,
+    shouldDivideFlat: boolean,
+    feeDecimals: number,
   ) => number;
   calculateTotal: (
     action: OrderSide,

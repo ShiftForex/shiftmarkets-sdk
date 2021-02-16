@@ -14,7 +14,7 @@ export declare class OrderHelper {
     calculateAmount: (action: OrderSide, amount: number, calculatedPrice: number, commissionAccount: AccountType, isSinglePrice?: boolean) => number;
     calculateNet: (action: OrderSide, commissionAccount: AccountType, amount: number, calculatedPrice: number, calculatedFees: number, isQuote?: boolean | undefined) => number;
     calculateFee: (method: FeeCalculationMethod, fee: number, amount: number) => number;
-    calculateFees: (total: number, price: number, fees: InstrumentFee, orderType: OrderType, action: OrderSide, bidAsk: BidAskValues, commissionAccount: AccountType, isQuote?: boolean) => number;
+    calculateFees: (total: number, price: number, fees: InstrumentFee, orderType: OrderType, action: OrderSide, bidAsk: BidAskValues, commissionAccount: AccountType, isQuote?: boolean, shouldDivideFlat?: boolean, feeDecimals?: number) => number;
     calculateTotal: (action: OrderSide, commissionAccount: AccountType, amount: number, calculatedPrice: number, calculatedFees: number, isQuote?: boolean | undefined) => number;
 }
 export interface IOrderHelper {
@@ -25,6 +25,6 @@ export interface IOrderHelper {
     calculateAmount: (action: OrderSide, amount: number, calculatedPrice: number, commissionAccount: AccountType, isSinglePrice?: boolean) => number;
     calculateNet: (action: OrderSide, commissionAccount: AccountType, amount: number, calculatedPrice: number, calculatedFees: number, isQuote?: boolean) => number;
     calculateFee: (method: FeeCalculationMethod, fee: number, amount: number) => number;
-    calculateFees: (total: number, price: number, fees: InstrumentFee, orderType: OrderType, action: OrderSide, bidAsk: BidAskValues, commissionAccount: AccountType, isQuote: boolean) => number;
+    calculateFees: (total: number, price: number, fees: InstrumentFee, orderType: OrderType, action: OrderSide, bidAsk: BidAskValues, commissionAccount: AccountType, isQuote: boolean, shouldDivideFlat: boolean, feeDecimals: number) => number;
     calculateTotal: (action: OrderSide, commissionAccount: AccountType, amount: number, calculatedPrice: number, calculatedFees: number, isQuote?: boolean) => number;
 }

@@ -134,6 +134,8 @@ export class OrderSummary {
       this.summary.bidAsk,
       this.summary.commissionAccount,
       isQuote,
+      this.summary.feeProduct === this.summary.base,
+      this.summary.feeDecimals,
     );
     this.summary.calculatedTotal = OrderHelperInstance.calculateTotal(
       this.summary.action,

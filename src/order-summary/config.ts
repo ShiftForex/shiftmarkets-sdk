@@ -50,13 +50,13 @@ export default {
       feeProduct: base,
       netProduct: base,
     },
-    sell_base_source_account: {
+    sell_base_source_account: { // ok
       amountProduct: quote,
       totalProduct: base,
       feeProduct: base,
-      netProduct: quote,
+      netProduct: base,
     },
-    buy_base_source_account: {
+    buy_base_source_account: { // ok
       amountProduct: base,
       totalProduct: quote,
       feeProduct: quote,

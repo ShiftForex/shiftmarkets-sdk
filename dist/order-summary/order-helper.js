@@ -72,7 +72,7 @@ class OrderHelper {
                     },
                     [quote]: {
                         [interfaces_1.Sides.Buy]: amount,
-                        [interfaces_1.Sides.Sell]: amount / calculatedPrice - calculatedFees,
+                        [interfaces_1.Sides.Sell]: amount / calculatedPrice,
                     },
                 },
                 [interfaces_2.AccountType.destinationAccount]: {
@@ -95,7 +95,7 @@ class OrderHelper {
             };
             return fees[method];
         };
-        this.calculateFees = (total, price, fees, orderType, action, bidAsk, commissionAccount, isQuote = false) => {
+        this.calculateFees = (total, price, fees, orderType, action, bidAsk, commissionAccount, isQuote = false, shouldDivideFlat = false, feeDecimals = 5) => {
             const { bid, ask } = bidAsk;
             if (!fees || total === 0) {
                 return 0;
@@ -116,12 +116,22 @@ class OrderHelper {
             if (!fee) {
                 return feeAmount.toNumber();
             }
+            /**
+             * Used in case if fee should be in BTC (base) so, flat price divided on BTC (base) price
+             * @param flatFee
+             */
+            const flatInBase = (flatFee) => {
+                if (shouldDivideFlat) {
+                    return flatFee.dividedBy(price);
+                }
+                return flatFee;
+            };
             if (method === interfaces_2.FeeType.maker) {
                 if (fee.makerProgressive) {
                     feeAmount = feeAmount.plus(new bignumber_js_1.default(this.calculateFee(fee.progressiveMethod, fee.makerProgressive, total)));
                 }
                 if (fee.makerFlat) {
-                    feeAmount = feeAmount.plus(new bignumber_js_1.default(this.calculateFee(fee.flatMethod, fee.makerFlat, total)));
+                    feeAmount = feeAmount.plus(flatInBase(new bignumber_js_1.default(this.calculateFee(fee.flatMethod, fee.makerFlat, total))));
                 }
             }
             else {
@@ -129,7 +139,7 @@ class OrderHelper {
                     feeAmount = feeAmount.plus(new bignumber_js_1.default(this.calculateFee(fee.progressiveMethod, fee.takerProgressive, total)));
                 }
                 if (fee.takerFlat) {
-                    feeAmount = feeAmount.plus(new bignumber_js_1.default(this.calculateFee(fee.flatMethod, fee.takerFlat, total)));
+                    feeAmount = feeAmount.plus(flatInBase(new bignumber_js_1.default(this.calculateFee(fee.flatMethod, fee.takerFlat, total))));
                 }
             }
             const base = interfaces_1.ProductType.base;
@@ -156,7 +166,7 @@ class OrderHelper {
                     },
                 },
             };
-            return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(10)));
+            return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(feeDecimals)));
         };
         this.calculateTotal = (action, commissionAccount, amount, calculatedPrice, calculatedFees, isQuote) => {
             const base = interfaces_1.ProductType.base;

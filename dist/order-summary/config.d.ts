@@ -53,7 +53,7 @@ declare const _default: {
             amountProduct: ProductType;
             totalProduct: ProductType.base;
             feeProduct: ProductType.base;
-            netProduct: ProductType;
+            netProduct: ProductType.base;
         };
         buy_base_source_account: {
             amountProduct: ProductType.base;
