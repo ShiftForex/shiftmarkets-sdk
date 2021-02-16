@@ -42,9 +42,9 @@ const cases = [
             expect(result.totalDecimals).toBe(2);
             expect(result.feeDecimals).toBe(2);
             expect(result.feeProduct).toBe('USD');
-            expect(result.netProduct).toBe('BTC');
-            expect(result.amountDecimals).toBe(2);
-            expect(result.amountProduct).toBe('USD');
+            expect(result.netProduct).toBe('USD');
+            expect(result.amountDecimals).toBe(8);
+            expect(result.amountProduct).toBe('BTC');
             expect(result.currentProduct).toBe('BTC');
             expect(result.isQuote).toBe(false);
         }
@@ -67,9 +67,9 @@ const cases = [
             expect(result.totalDecimals).toBe(8);
             expect(result.feeDecimals).toBe(8);
             expect(result.feeProduct).toBe('BTC');
-            expect(result.netProduct).toBe('USD');
-            expect(result.amountDecimals).toBe(8);
-            expect(result.amountProduct).toBe('BTC');
+            expect(result.netProduct).toBe('BTC');
+            expect(result.amountDecimals).toBe(2);
+            expect(result.amountProduct).toBe('USD');
             expect(result.currentProduct).toBe('BTC');
             expect(result.isQuote).toBe(false);
         }
@@ -107,18 +107,18 @@ const cases = [
             commissionAccount: AccountType.sourceAccount,
         }),
         result: (result: OrderSummaryValues) => {
-            expect(result.fees).toBe(21.55035);
+            expect(result.fees).toBe(21.55);
             expect(result.price).toBe(10060.327094455542);
             expect(result.amount).toBe(2.1421122591408435);
             expect(result.net).toBe(21550.35);
-            expect(result.total).toBe(21571.90035);
+            expect(result.total).toBe(21571.899999999998);
             expect(result.totalProduct).toBe('USD');
             expect(result.totalDecimals).toBe(2);
             expect(result.feeDecimals).toBe(2);
             expect(result.feeProduct).toBe('USD');
             expect(result.netProduct).toBe('USD');
-            expect(result.amountDecimals).toBe(2);
-            expect(result.amountProduct).toBe('USD');
+            expect(result.amountDecimals).toBe(8);
+            expect(result.amountProduct).toBe('BTC');
             expect(result.currentProduct).toBe('USD');
             expect(result.isQuote).toBe(true);
         }
@@ -160,10 +160,10 @@ const cases = [
             expect(result.fees).toBe(0.000375);
             expect(result.price).toBe(10000);
             expect(result.amount).toBe(3750);
-            expect(result.net).toBe(0.374625);
+            expect(result.net).toBe(0.375);
             expect(result.total).toBe(0.375375);
-            expect(result.totalProduct).toBe('USD');
-            expect(result.totalDecimals).toBe(2);
+            expect(result.totalProduct).toBe('BTC');
+            expect(result.totalDecimals).toBe(8);
             expect(result.feeDecimals).toBe(8);
             expect(result.feeProduct).toBe('BTC');
             expect(result.netProduct).toBe('BTC');
