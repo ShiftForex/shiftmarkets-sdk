@@ -52,11 +52,8 @@ export interface OrderSummaryValues {
   net: number;
   total: number;
   feeProduct: string;
-  feeDecimals: number;
   totalProduct: string;
-  totalDecimals: number;
   netProduct: string;
-  amountDecimals: number;
   amountProduct: string;
   currentProduct?: string;
   isSinglePrice?: boolean;

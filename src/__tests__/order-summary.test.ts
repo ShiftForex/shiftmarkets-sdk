@@ -15,11 +15,8 @@ const cases = [
             expect(result.net).toBe(1.998)
             expect(result.total).toBe(2);
             expect(result.totalProduct).toBe('BTC');
-            expect(result.totalDecimals).toBe(8);
-            expect(result.feeDecimals).toBe(8);
             expect(result.feeProduct).toBe('BTC');
             expect(result.netProduct).toBe('BTC');
-            expect(result.amountDecimals).toBe(2);
             expect(result.amountProduct).toBe('USD');
             expect(result.currentProduct).toBe('BTC');
             expect(result.isQuote).toBe(false);
@@ -39,11 +36,8 @@ const cases = [
             expect(result.net).toBe(40600);
             expect(result.total).toBe(40640.6);
             expect(result.totalProduct).toBe('USD');
-            expect(result.totalDecimals).toBe(2);
-            expect(result.feeDecimals).toBe(2);
             expect(result.feeProduct).toBe('USD');
             expect(result.netProduct).toBe('USD');
-            expect(result.amountDecimals).toBe(8);
             expect(result.amountProduct).toBe('BTC');
             expect(result.currentProduct).toBe('BTC');
             expect(result.isQuote).toBe(false);
@@ -64,11 +58,8 @@ const cases = [
             expect(result.net).toBe(0.005);
             expect(result.total).toBe(0.005005);
             expect(result.totalProduct).toBe('BTC');
-            expect(result.totalDecimals).toBe(8);
-            expect(result.feeDecimals).toBe(8);
             expect(result.feeProduct).toBe('BTC');
             expect(result.netProduct).toBe('BTC');
-            expect(result.amountDecimals).toBe(2);
             expect(result.amountProduct).toBe('USD');
             expect(result.currentProduct).toBe('BTC');
             expect(result.isQuote).toBe(false);
@@ -88,11 +79,8 @@ const cases = [
             expect(result.net).toBe(82317.6);
             expect(result.total).toBe(82400);
             expect(result.totalProduct).toBe('USD');
-            expect(result.totalDecimals).toBe(2);
-            expect(result.feeDecimals).toBe(2);
             expect(result.feeProduct).toBe('USD');
             expect(result.netProduct).toBe('USD');
-            expect(result.amountDecimals).toBe(8);
             expect(result.amountProduct).toBe('BTC');
             expect(result.currentProduct).toBe('BTC');
             expect(result.isQuote).toBe(false);
@@ -113,11 +101,8 @@ const cases = [
             expect(result.net).toBe(21550.35);
             expect(result.total).toBe(21571.899999999998);
             expect(result.totalProduct).toBe('USD');
-            expect(result.totalDecimals).toBe(2);
-            expect(result.feeDecimals).toBe(2);
             expect(result.feeProduct).toBe('USD');
             expect(result.netProduct).toBe('USD');
-            expect(result.amountDecimals).toBe(8);
             expect(result.amountProduct).toBe('BTC');
             expect(result.currentProduct).toBe('USD');
             expect(result.isQuote).toBe(true);
@@ -137,11 +122,8 @@ const cases = [
             expect(result.net).toBe(0.4995);
             expect(result.total).toBe(0.5);
             expect(result.totalProduct).toBe('BTC');
-            expect(result.totalDecimals).toBe(8);
-            expect(result.feeDecimals).toBe(8);
             expect(result.feeProduct).toBe('BTC');
             expect(result.netProduct).toBe('BTC');
-            expect(result.amountDecimals).toBe(2);
             expect(result.amountProduct).toBe('USD');
             expect(result.currentProduct).toBe('USD');
             expect(result.isQuote).toBe(true);
@@ -163,11 +145,8 @@ const cases = [
             expect(result.net).toBe(0.375);
             expect(result.total).toBe(0.375375);
             expect(result.totalProduct).toBe('BTC');
-            expect(result.totalDecimals).toBe(8);
-            expect(result.feeDecimals).toBe(8);
             expect(result.feeProduct).toBe('BTC');
             expect(result.netProduct).toBe('BTC');
-            expect(result.amountDecimals).toBe(2);
             expect(result.amountProduct).toBe('USD');
             expect(result.currentProduct).toBe('USD');
             expect(result.isQuote).toBe(true);
@@ -188,11 +167,8 @@ const cases = [
             expect(result.net).toBe(2497.5);
             expect(result.total).toBe(2500);
             expect(result.totalProduct).toBe('USD');
-            expect(result.totalDecimals).toBe(2);
-            expect(result.feeDecimals).toBe(2);
             expect(result.feeProduct).toBe('USD');
             expect(result.netProduct).toBe('USD');
-            expect(result.amountDecimals).toBe(8);
             expect(result.amountProduct).toBe('BTC');
             expect(result.currentProduct).toBe('USD');
             expect(result.isQuote).toBe(true);
