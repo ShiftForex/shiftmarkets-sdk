@@ -5,6 +5,7 @@ import { SdkService } from "../common/sdk.service";
 import { Instrument } from "./interfaces/instrument.interface";
 import { Currency } from "./dto/currency.dto";
 import { Product } from "./interfaces/product.interface";
+import { Quote } from "./interfaces/quote.interface";
 
 const debug = debugFactory("ClientSDK:ExchangeDataService");
 
@@ -128,6 +129,55 @@ export class ExchangeDataService extends SdkService {
         },
       } as Product;
     });
+  }
+
+  protected castQuote(response: any): Quote {
+    let result: Quote = {
+      pair: response.pair,
+      ask: Number(response.ask),
+      bid: Number(response.bid),
+      price_24h_change: Number(response.price_24h_change),
+      volume_24h_change: Number(response.volume_24h_change),
+      price_24h_max: Number(response.price_24h_max),
+      price_24h_min: Number(response.price_24h_min),
+      volume: response.volume,
+      date_ts: response.date_ts,
+    };
+    return result;
+  }
+
+  /**
+   * Get all quotes
+   */
+  async getQuotes(): Promise<Quote[]> {
+    let request = {
+      url: `${this.config.eds_api_url}/quotes`,
+      method: "GET" as "GET",
+      params: { exchange: this.exchange },
+      timeout: 15000,
+      headers: {},
+    };
+    let response = await edsServiceRequest(request);
+    let result = [];
+    for (let quote of response) {
+      result.push(this.castQuote(quote));
+    }
+    return result;
+  }
+
+  /**
+   * Get quote of instrument
+   */
+  async getQuote(instrument: string): Promise<Quote> {
+    let request = {
+      url: `${this.config.eds_api_url}/quotes`,
+      method: "GET" as "GET",
+      params: { exchange: this.exchange, instrument },
+      timeout: 15000,
+      headers: {},
+    };
+    let response = await edsServiceRequest(request);
+    return this.castQuote(response);
   }
 
   /**
