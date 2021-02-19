@@ -4,6 +4,7 @@ import { AxiosRequestConfig } from "axios";
 import { SdkService } from "../common/sdk.service";
 import { Instrument } from "./interfaces/instrument.interface";
 import { Product } from "./interfaces/product.interface";
+import { Quote } from "./interfaces/quote.interface";
 export default interface Listener<T> {
     (data: T): void;
 }
@@ -19,6 +20,15 @@ export declare class ExchangeDataService extends SdkService {
      * Get products on exchange
      */
     getProducts(): Promise<Product[]>;
+    protected castQuote(response: any): Quote;
+    /**
+     * Get all quotes
+     */
+    getQuotes(): Promise<Quote[]>;
+    /**
+     * Get quote of instrument
+     */
+    getQuote(instrument: string): Promise<Quote>;
     /**
      * Create new websocket connection to Exchange Data Service
      * and return connected websocket

@@ -123,6 +123,52 @@ class ExchangeDataService extends sdk_service_1.SdkService {
             };
         });
     }
+    castQuote(response) {
+        let result = {
+            pair: response.pair,
+            ask: Number(response.ask),
+            bid: Number(response.bid),
+            price_24h_change: Number(response.price_24h_change),
+            volume_24h_change: Number(response.volume_24h_change),
+            price_24h_max: Number(response.price_24h_max),
+            price_24h_min: Number(response.price_24h_min),
+            volume: response.volume,
+            date_ts: response.date_ts,
+        };
+        return result;
+    }
+    /**
+     * Get all quotes
+     */
+    async getQuotes() {
+        let request = {
+            url: `${this.config.eds_api_url}/quotes`,
+            method: "GET",
+            params: { exchange: this.exchange },
+            timeout: 15000,
+            headers: {},
+        };
+        let response = await edsServiceRequest(request);
+        let result = [];
+        for (let quote of response) {
+            result.push(this.castQuote(quote));
+        }
+        return result;
+    }
+    /**
+     * Get quote of instrument
+     */
+    async getQuote(instrument) {
+        let request = {
+            url: `${this.config.eds_api_url}/quotes`,
+            method: "GET",
+            params: { exchange: this.exchange, instrument },
+            timeout: 15000,
+            headers: {},
+        };
+        let response = await edsServiceRequest(request);
+        return this.castQuote(response);
+    }
     /**
      * Create new websocket connection to Exchange Data Service
      * and return connected websocket
