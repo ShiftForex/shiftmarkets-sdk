@@ -15,25 +15,25 @@ export default {
       netProduct: base,
     },
     sell_quote_destination_account: {
-      amountProduct: quote,
+      amountProduct: base,
       totalProduct: quote,
       feeProduct: quote,
-      netProduct: base,
+      netProduct: quote,
     },
     buy_quote_destination_account: {
       amountProduct: quote,
-      totalProduct: quote,
+      totalProduct: base,
       feeProduct: base,
-      netProduct: quote,
+      netProduct: base,
     },
     sell_quote_source_account: {
       amountProduct: quote,
-      totalProduct: quote,
+      totalProduct: base,
       feeProduct: base,
       netProduct: base,
     },
     buy_quote_source_account: {
-      amountProduct: quote,
+      amountProduct: base,
       totalProduct: quote,
       feeProduct: quote,
       netProduct: quote,
@@ -50,17 +50,17 @@ export default {
       feeProduct: base,
       netProduct: base,
     },
-    sell_base_source_account: {
-      amountProduct: base,
+    sell_base_source_account: { // ok
+      amountProduct: quote,
       totalProduct: base,
       feeProduct: base,
-      netProduct: quote,
+      netProduct: base,
     },
-    buy_base_source_account: {
-      amountProduct: quote,
+    buy_base_source_account: { // ok
+      amountProduct: base,
       totalProduct: quote,
       feeProduct: quote,
-      netProduct: base,
+      netProduct: quote,
     },
   },
   products: {

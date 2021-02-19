@@ -1,39 +1,36 @@
-import {
-  OrderType,
-  Sides,
-  OrderSide,
-  Types,
-  ProductType,
-} from "../trade/interfaces";
-import {
-  AccountType,
-  BidAskValues,
-  InstrumentFee,
-  IOrderBook,
-  FeeCalculationMethod,
-  FeeType,
-  Fee,
-} from "./interfaces";
-import { Orderbook } from "../orderbook/orderbook";
-import { calculateQuoteVWAP, calculateVWAP } from "../orderbook/utils/vwap";
-import { VolumeWeightedAveragePrice } from "../orderbook/interfaces/volume-weighted-average-price.interface";
+import {OrderSide, OrderType, ProductType, Sides, Types,} from "../trade/interfaces";
+import {AccountType, BidAskValues, Fee, FeeCalculationMethod, FeeType, InstrumentFee, IOrderBook,} from "./interfaces";
+import {Orderbook} from "../orderbook/orderbook";
+import {calculateQuoteVWAP, calculateVWAP} from "../orderbook/utils/vwap";
+import {VolumeWeightedAveragePrice} from "../orderbook/interfaces/volume-weighted-average-price.interface";
+import BigNumber from "bignumber.js";
 
+/**
+ * https://docs.google.com/document/d/1XFA8Vj2qzqHuUKthFV0c6Vz3p96WCCcqtv1AhmYIKPY/edit
+ */
 export class OrderHelper {
+  checkIfFinite = (value: number) => isFinite(value) ? value : 0;
+
   calculateVWAP = (
     action: OrderSide,
-    orderBook: IOrderBook,
+    _orderBook: IOrderBook,
     amount: number
-  ): VolumeWeightedAveragePrice =>
-    calculateVWAP(action === "sell" ? orderBook.asks : orderBook.bids, amount);
+  ): VolumeWeightedAveragePrice => {
+    const orderBook = action === "sell" ? _orderBook.asks : _orderBook.bids;
+    const vwapResult = calculateVWAP(orderBook, amount);
+    return {
+      ...vwapResult,
+      price: isFinite(vwapResult.price) && vwapResult.price > 0 ? vwapResult.price : orderBook[0]?.price || 0
+    }
+  }
 
   calculateQuoteQuantityVWAP = (
     orderBook: IOrderBook,
     action: OrderSide,
     quoteQuantity: number
-  ): VolumeWeightedAveragePrice =>
-    calculateQuoteVWAP(
-      action === "sell" ? orderBook.asks : orderBook.bids,
-      quoteQuantity
+  ): VolumeWeightedAveragePrice => calculateQuoteVWAP(
+        action === "sell" ? orderBook.asks : orderBook.bids,
+        quoteQuantity
     );
 
   getPrice = (
@@ -52,18 +49,40 @@ export class OrderHelper {
   };
 
   amountOnPrice = (amount: number, calculatedPrice: number): number =>
-    amount * calculatedPrice;
+      this.checkIfFinite(amount * calculatedPrice);
 
   calculateAmount = (
     action: OrderSide,
     amount: number,
-    calculatedPrice: number
+    calculatedPrice: number,
+    commissionAccount: AccountType,
+    isSinglePrice: boolean = false,
   ): number => {
+    const base = ProductType.base;
+    const quote = ProductType.quote;
     const amounts = {
-      [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
-      [Sides.Sell]: amount,
+      [AccountType.destinationAccount]: {
+        [base]: {
+          [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
+          [Sides.Sell]: amount,
+        },
+        [quote]: {
+          [Sides.Buy]: amount,
+          [Sides.Sell]: amount / calculatedPrice,
+        },
+      },
+      [AccountType.sourceAccount]: {
+        [base]: {
+          [Sides.Buy]: amount,
+          [Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
+        },
+        [quote]: {
+          [Sides.Buy]: amount / calculatedPrice,
+          [Sides.Sell]: amount,
+        },
+      }
     };
-    return amounts[action];
+    return this.checkIfFinite(amounts[commissionAccount][isSinglePrice ? quote : base][action]);
   };
 
   calculateNet = (
@@ -79,12 +98,12 @@ export class OrderHelper {
     const nets = {
       [AccountType.sourceAccount]: {
         [base]: {
-          [Sides.Buy]: amount,
-          [Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
+          [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice),
+          [Sides.Sell]: amount,
         },
         [quote]: {
-          [Sides.Buy]: amount - calculatedFees, // amount is base
-          [Sides.Sell]: amount / calculatedPrice - calculatedFees, // base / base
+          [Sides.Buy]: amount,
+          [Sides.Sell]: amount / calculatedPrice,
         },
       },
       [AccountType.destinationAccount]: {
@@ -94,13 +113,13 @@ export class OrderHelper {
             this.amountOnPrice(amount, calculatedPrice) - calculatedFees,
         },
         [quote]: {
-          [Sides.Buy]: amount - calculatedFees * calculatedPrice, // calculate fees as base
-          [Sides.Sell]: (amount - calculatedFees) / calculatedPrice, // base / base
+          [Sides.Buy]: amount / calculatedPrice - calculatedFees,
+          [Sides.Sell]: amount - calculatedFees,
         },
       },
     };
 
-    return nets[commissionAccount][isQuote ? quote : base][action];
+    return this.checkIfFinite(nets[commissionAccount][isQuote ? quote : base][action]);
   };
 
   calculateFee = (
@@ -123,7 +142,9 @@ export class OrderHelper {
     action: OrderSide,
     bidAsk: BidAskValues,
     commissionAccount: AccountType,
-    isQuote: boolean = false
+    isQuote: boolean = false,
+    shouldDivideFlat: boolean = false,
+    feeDecimals: number = 5,
   ): number => {
     const { bid, ask } = bidAsk;
 
@@ -147,50 +168,87 @@ export class OrderHelper {
       method = FeeType.taker;
     }
 
-    let feeAmount: number = 0;
+    let feeAmount: BigNumber = new BigNumber(0);
     if (!fee) {
-      return feeAmount;
+      return feeAmount.toNumber();
+    }
+    /**
+     * Used in case if fee should be in BTC (base) so, flat price divided on BTC (base) price
+     * @param flatFee
+     */
+    const flatInBase = (flatFee: BigNumber) => {
+      if (shouldDivideFlat) {
+        return flatFee.dividedBy(price);
+      }
+      return flatFee;
     }
 
     if (method === FeeType.maker) {
       if (fee.makerProgressive) {
-        feeAmount = this.calculateFee(
-          fee.progressiveMethod,
-          fee.makerProgressive,
-          total
+        feeAmount = feeAmount.plus(
+          new BigNumber(this.calculateFee(
+            fee.progressiveMethod,
+            fee.makerProgressive,
+            total
+          ))
         );
       }
       if (fee.makerFlat) {
-        feeAmount += this.calculateFee(fee.flatMethod, fee.makerFlat, total);
+        feeAmount = feeAmount.plus(
+          flatInBase(new BigNumber(this.calculateFee(
+            fee.flatMethod,
+            fee.makerFlat,
+            total
+          )))
+        );
       }
     } else {
       if (fee.takerProgressive) {
-        feeAmount = this.calculateFee(
-          fee.progressiveMethod,
-          fee.takerProgressive,
-          total
+        feeAmount = feeAmount.plus(
+          new BigNumber(this.calculateFee(
+            fee.progressiveMethod,
+            fee.takerProgressive,
+            total
+          ))
         );
       }
       if (fee.takerFlat) {
-        feeAmount += this.calculateFee(fee.flatMethod, fee.takerFlat, total);
+        feeAmount = feeAmount.plus(
+          flatInBase(new BigNumber(this.calculateFee(
+            fee.flatMethod,
+            fee.takerFlat,
+            total
+          )))
+        );
       }
     }
 
-    if (
-      action === Sides.Buy &&
-      isQuote &&
-      commissionAccount !== AccountType.sourceAccount
-    ) {
-      return feeAmount * (1 / price);
-    }
-    if (
-      action === Sides.Sell &&
-      isQuote &&
-      commissionAccount === AccountType.sourceAccount
-    ) {
-      return feeAmount * (1 / price);
-    }
-    return feeAmount;
+    const base = ProductType.base;
+    const quote = ProductType.quote;
+    const resultTypes = {
+      [AccountType.sourceAccount]: {
+        [base]: {
+          [Sides.Buy]: feeAmount,
+          [Sides.Sell]: feeAmount,
+        },
+        [quote]: {
+          [Sides.Buy]: feeAmount,
+          [Sides.Sell]: feeAmount,
+        },
+      },
+      [AccountType.destinationAccount]: {
+        [base]: {
+          [Sides.Buy]: feeAmount,
+          [Sides.Sell]: feeAmount,
+        },
+        [quote]: {
+          [Sides.Buy]: feeAmount,
+          [Sides.Sell]: feeAmount,
+        },
+      },
+    };
+
+    return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(feeDecimals)));
   };
 
   calculateTotal = (
@@ -206,16 +264,12 @@ export class OrderHelper {
     const totals = {
       [AccountType.sourceAccount]: {
         [base]: {
-          [Sides.Buy]:
-            this.calculateAmount(action, amount, calculatedPrice) +
-            calculatedFees,
-          [Sides.Sell]:
-            this.calculateAmount(action, amount, calculatedPrice) +
-            calculatedFees,
+          [Sides.Buy]: this.amountOnPrice(amount, calculatedPrice) + calculatedFees,
+          [Sides.Sell]: amount + calculatedFees,
         },
         [quote]: {
-          [Sides.Buy]: amount,
-          [Sides.Sell]: amount,
+          [Sides.Buy]: amount + calculatedFees,
+          [Sides.Sell]: amount / calculatedPrice + calculatedFees,
         },
       },
       [AccountType.destinationAccount]: {
@@ -224,12 +278,12 @@ export class OrderHelper {
           [Sides.Sell]: this.amountOnPrice(amount, calculatedPrice),
         },
         [quote]: {
-          [Sides.Buy]: amount,
+          [Sides.Buy]: amount / calculatedPrice,
           [Sides.Sell]: amount,
         },
       },
     };
-    return totals[commissionAccount][isQuote ? quote : base][action];
+    return this.checkIfFinite(totals[commissionAccount][isQuote ? quote : base][action]);
   };
 }
 
@@ -255,6 +309,7 @@ export interface IOrderHelper {
     action: OrderSide,
     amount: number,
     calculatedPrice: number,
+    commissionAccount: AccountType,
     isSinglePrice?: boolean
   ) => number;
   calculateNet: (
@@ -278,7 +333,9 @@ export interface IOrderHelper {
     action: OrderSide,
     bidAsk: BidAskValues,
     commissionAccount: AccountType,
-    isQuote: boolean
+    isQuote: boolean,
+    shouldDivideFlat: boolean,
+    feeDecimals: number,
   ) => number;
   calculateTotal: (
     action: OrderSide,
