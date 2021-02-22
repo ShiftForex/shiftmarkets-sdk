@@ -125,7 +125,7 @@ class ExchangeDataService extends sdk_service_1.SdkService {
     }
     castQuote(response) {
         let result = {
-            instrument: response.instrument,
+            instrument: response.pair,
             ask: Number(response.ask),
             bid: Number(response.bid),
             price_24h_change: Number(response.price_24h_change),
