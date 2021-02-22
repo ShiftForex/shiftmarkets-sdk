@@ -1,5 +1,5 @@
 export interface Quote {
-    pair: string;
+    instrument: string;
     bid: number;
     ask: number;
     price_24h_change: number;

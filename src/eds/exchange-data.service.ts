@@ -133,7 +133,7 @@ export class ExchangeDataService extends SdkService {
 
   protected castQuote(response: any): Quote {
     let result: Quote = {
-      pair: response.pair,
+      instrument: response.instrument,
       ask: Number(response.ask),
       bid: Number(response.bid),
       price_24h_change: Number(response.price_24h_change),
