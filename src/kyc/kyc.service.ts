@@ -56,7 +56,8 @@ export class KycService {
   getExtendedProfileSchema(
     userType: 'personal' | 'company',
     extra = '',
-    isUpdate?: boolean
+    isUpdate?: boolean,
+    provider = '',
   ) {
     return kycServiceRequest({
       baseURL: this.config.kyc_api_url,
@@ -70,6 +71,7 @@ export class KycService {
         userType,
         extra,
         isUpdate,
+        provider,
       },
     });
   }
