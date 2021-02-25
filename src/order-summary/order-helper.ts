@@ -144,7 +144,6 @@ export class OrderHelper {
     commissionAccount: AccountType,
     isQuote: boolean = false,
     shouldDivideFlat: boolean = false,
-    feeDecimals: number = 5,
   ): number => {
     const { bid, ask } = bidAsk;
 
@@ -248,7 +247,7 @@ export class OrderHelper {
       },
     };
 
-    return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(feeDecimals)));
+    return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toNumber()));
   };
 
   calculateTotal = (
@@ -335,7 +334,6 @@ export interface IOrderHelper {
     commissionAccount: AccountType,
     isQuote: boolean,
     shouldDivideFlat: boolean,
-    feeDecimals: number,
   ) => number;
   calculateTotal: (
     action: OrderSide,
