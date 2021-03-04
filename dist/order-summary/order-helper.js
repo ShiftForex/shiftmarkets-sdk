@@ -121,6 +121,10 @@ class OrderHelper {
              * @param flatFee
              */
             const flatInBase = (flatFee) => {
+                /**
+                 * If fee in BTC (base)
+                 */
+                return flatFee;
                 if (shouldDivideFlat) {
                     return flatFee.dividedBy(price);
                 }
