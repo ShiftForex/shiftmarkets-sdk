@@ -95,7 +95,7 @@ class OrderHelper {
             };
             return fees[method];
         };
-        this.calculateFees = (total, price, fees, orderType, action, bidAsk, commissionAccount, isQuote = false, shouldDivideFlat = false, feeDecimals = 5) => {
+        this.calculateFees = (total, price, fees, orderType, action, bidAsk, commissionAccount, isQuote = false, shouldDivideFlat = false) => {
             const { bid, ask } = bidAsk;
             if (!fees || total === 0) {
                 return 0;
@@ -166,7 +166,7 @@ class OrderHelper {
                     },
                 },
             };
-            return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toFormat(feeDecimals)));
+            return this.checkIfFinite(Number(resultTypes[commissionAccount][isQuote ? quote : base][action].toNumber()));
         };
         this.calculateTotal = (action, commissionAccount, amount, calculatedPrice, calculatedFees, isQuote) => {
             const base = interfaces_1.ProductType.base;
