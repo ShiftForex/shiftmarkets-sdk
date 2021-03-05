@@ -36,6 +36,16 @@ export enum VaultAccrualMethod {
   SimpleInterest = 'SIMPLE_INTEREST',
 }
 
+export enum VaultProtocolType {
+  Alkemi = 'ALKEMI'
+}
+
+export enum VaultCategory {
+  DeFi = 'DEFI',
+  Staking = 'STAKING',
+  YieldFarming = 'YIELD_FARMING'
+}
+
 export enum VaultRateType {
   Fixed = 'FIXED',
   Stable = 'STABLE',
@@ -49,6 +59,12 @@ export interface Interest {
   accrualInterval: number;
   rateType: VaultRateType;
   baseAnnualRate: number;
+}
+
+export interface VaultFarmingAsset {
+  id: string;
+  details?: any;
+  [propName: string]: any;
 }
 
 export type TransactionType = VaultTypeTransaction.Deposit
@@ -83,9 +99,12 @@ export interface VaultProduct {
   termUnit?: VaultTimeUnit;
   termLength?: number;
   interest?: Interest;
-  customData?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  customData?: any;
+  protocol?: VaultProtocolType;
+  categories?: VaultCategory[];
+  farmingAssets?: VaultFarmingAsset[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface VaultHistory {

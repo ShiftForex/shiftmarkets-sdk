@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VaultRateType = exports.VaultAccrualMethod = exports.VaultAccrualMode = exports.VaultTermType = exports.VaultTimeUnit = exports.VaultAccountType = exports.VaultTypeTransaction = void 0;
+exports.VaultRateType = exports.VaultCategory = exports.VaultProtocolType = exports.VaultAccrualMethod = exports.VaultAccrualMode = exports.VaultTermType = exports.VaultTimeUnit = exports.VaultAccountType = exports.VaultTypeTransaction = void 0;
 var VaultTypeTransaction;
 (function (VaultTypeTransaction) {
     VaultTypeTransaction["Withdraw"] = "LENDING_REDEMPTION";
@@ -37,6 +37,16 @@ var VaultAccrualMethod;
     VaultAccrualMethod["CompoundInterest"] = "COMPOUND_INTEREST";
     VaultAccrualMethod["SimpleInterest"] = "SIMPLE_INTEREST";
 })(VaultAccrualMethod = exports.VaultAccrualMethod || (exports.VaultAccrualMethod = {}));
+var VaultProtocolType;
+(function (VaultProtocolType) {
+    VaultProtocolType["Alkemi"] = "ALKEMI";
+})(VaultProtocolType = exports.VaultProtocolType || (exports.VaultProtocolType = {}));
+var VaultCategory;
+(function (VaultCategory) {
+    VaultCategory["DeFi"] = "DEFI";
+    VaultCategory["Staking"] = "STAKING";
+    VaultCategory["YieldFarming"] = "YIELD_FARMING";
+})(VaultCategory = exports.VaultCategory || (exports.VaultCategory = {}));
 var VaultRateType;
 (function (VaultRateType) {
     VaultRateType["Fixed"] = "FIXED";
