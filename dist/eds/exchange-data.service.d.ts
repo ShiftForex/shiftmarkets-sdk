@@ -30,6 +30,10 @@ export declare class ExchangeDataService extends SdkService {
      */
     getQuote(instrument: string): Promise<Quote>;
     /**
+     * Get web config
+     */
+    getWebConfig(): Promise<Quote>;
+    /**
      * Create new websocket connection to Exchange Data Service
      * and return connected websocket
      */

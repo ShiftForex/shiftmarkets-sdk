@@ -181,6 +181,20 @@ export class ExchangeDataService extends SdkService {
   }
 
   /**
+   * Get web config
+   */
+  async getWebConfig(): Promise<Quote> {
+    let request = {
+      url: `${this.config.eds_api_url}/webconfig`,
+      method: "GET" as "GET",
+      params: { exchange: this.exchange },
+      timeout: 15000,
+      headers: {},
+    };
+    return await edsServiceRequest(request);
+  }
+
+  /**
    * Create new websocket connection to Exchange Data Service
    * and return connected websocket
    */
