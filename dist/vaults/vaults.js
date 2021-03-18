@@ -35,11 +35,11 @@ class LendingService extends sdk_service_1.SdkService {
     /**
      * Get lending products
      */
-    async getLendingProducts() {
+    async getLendingProducts(params = {}) {
         const request = {
             url: `${this.config.lending_api_url}/products`,
             method: "GET",
-            params: { exchange: this.exchange },
+            params: { exchange: this.exchange, ...params },
             timeout: 15000,
         };
         const response = await lendingServiceRequest(request, this.accessToken);
@@ -51,11 +51,11 @@ class LendingService extends sdk_service_1.SdkService {
     /**
      * Get lending balances
      */
-    async getLendingBalances() {
+    async getLendingBalances(params = {}) {
         const request = {
             url: `${this.config.lending_api_url}/lending/balances`,
             method: "GET",
-            params: { exchange: this.exchange },
+            params: { exchange: this.exchange, ...params },
             timeout: 15000,
         };
         const response = await lendingServiceRequest(request, this.accessToken);
@@ -63,13 +63,13 @@ class LendingService extends sdk_service_1.SdkService {
         return response;
     }
     /**
-     * Get lending balances
+     * Get lending history
      */
-    async getLendingHistory() {
+    async getLendingHistory(params = {}) {
         const request = {
             url: `${this.config.lending_api_url}/lending/history`,
             method: "GET",
-            params: { exchange: this.exchange },
+            params: { exchange: this.exchange, ...params },
             timeout: 15000,
         };
         const response = await lendingServiceRequest(request, this.accessToken);
@@ -77,6 +77,24 @@ class LendingService extends sdk_service_1.SdkService {
             field_to_bignumber_1.fieldToBN(lending, 'amount');
             field_to_date_1.fieldToDate(lending, 'updatedAt');
             field_to_date_1.fieldToDate(lending, 'createdAt');
+        });
+        return response;
+    }
+    /**
+     * Get lending pending-transaction
+     */
+    async getLendingPendingTransactions(params = {}) {
+        const request = {
+            url: `${this.config.lending_api_url}/lending/pending-transactions`,
+            method: "GET",
+            params: { exchange: this.exchange, ...params },
+            timeout: 15000,
+        };
+        const response = await lendingServiceRequest(request, this.accessToken);
+        response.forEach((pendingTransaction) => {
+            field_to_bignumber_1.fieldToBN(pendingTransaction, 'amount');
+            field_to_date_1.fieldToDate(pendingTransaction, 'createdAt');
+            field_to_date_1.fieldToDate(pendingTransaction, 'updatedAt');
         });
         return response;
     }
