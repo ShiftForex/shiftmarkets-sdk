@@ -6,7 +6,12 @@ import {
   VaultHistory,
   VaultBalance,
   VaultProduct,
+  VaultPendingTransaction,
   VaultDepositWithdrawResponse,
+  VaultPendingTransactionQuery,
+  VaultHistoryQuery,
+  VaultBalancesQuery,
+  VaultProductsQuery,
 } from "./interfaces";
 import { fieldToBN } from "../common/field-to-bignumber";
 import { fieldToDate } from "../common/field-to-date";
@@ -37,11 +42,11 @@ export class LendingService extends SdkService {
   /**
    * Get lending products
    */
-  async getLendingProducts(): Promise<VaultProduct[]> {
+  async getLendingProducts(params: VaultProductsQuery = {}): Promise<VaultProduct[]> {
     const request = {
       url: `${this.config.lending_api_url}/products`,
       method: "GET" as "GET",
-      params: { exchange: this.exchange },
+      params: { exchange: this.exchange, ...params },
       timeout: 15000,
     };
     const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct[];
@@ -59,11 +64,11 @@ export class LendingService extends SdkService {
   /**
    * Get lending balances
    */
-  async getLendingBalances(): Promise<VaultBalance[]> {
+  async getLendingBalances(params: VaultBalancesQuery = {}): Promise<VaultBalance[]> {
     const request = {
       url: `${this.config.lending_api_url}/lending/balances`,
       method: "GET" as "GET",
-      params: { exchange: this.exchange },
+      params: { exchange: this.exchange, ...params },
       timeout: 15000,
     };
     const response = await lendingServiceRequest(request, this.accessToken) as VaultBalance[];
@@ -72,13 +77,13 @@ export class LendingService extends SdkService {
   }
 
   /**
-   * Get lending balances
+   * Get lending history
    */
-  async getLendingHistory(): Promise<VaultHistory[]> {
+  async getLendingHistory(params: VaultHistoryQuery = {}): Promise<VaultHistory[]> {
     const request = {
       url: `${this.config.lending_api_url}/lending/history`,
       method: "GET" as "GET",
-      params: { exchange: this.exchange },
+      params: { exchange: this.exchange, ...params },
       timeout: 15000,
     };
     const response = await lendingServiceRequest(request, this.accessToken) as VaultHistory[];
@@ -86,6 +91,25 @@ export class LendingService extends SdkService {
       fieldToBN(lending, 'amount');
       fieldToDate(lending, 'updatedAt');
       fieldToDate(lending, 'createdAt');
+    });
+    return response;
+  }
+
+  /**
+   * Get lending pending-transaction
+   */
+  async getLendingPendingTransactions(params: VaultPendingTransactionQuery = {}): Promise<VaultPendingTransaction[]> {
+    const request = {
+      url: `${this.config.lending_api_url}/lending/pending-transactions`,
+      method: "GET" as "GET",
+      params: { exchange: this.exchange, ...params },
+      timeout: 15000,
+    };
+    const response = await lendingServiceRequest(request, this.accessToken) as VaultPendingTransaction[];
+    response.forEach((pendingTransaction: VaultPendingTransaction) => {
+      fieldToBN(pendingTransaction, 'amount');
+      fieldToDate(pendingTransaction, 'createdAt');
+      fieldToDate(pendingTransaction, 'updatedAt');
     });
     return response;
   }

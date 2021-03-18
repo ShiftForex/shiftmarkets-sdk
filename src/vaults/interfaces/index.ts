@@ -1,87 +1,47 @@
 import { BigNumber } from 'bignumber.js';
+import * as Enums from './enums';
 
-export enum VaultTypeTransaction {
-  Withdraw = 'LENDING_REDEMPTION',
-  Deposit = 'LENDING_ALLOCATION',
-  Interest = 'INTEREST',
-}
-
-export enum VaultAccountType {
-  Principal = 'LENDING_PRINCIPAL',
-  Interest = 'LENDING_INTEREST',
-}
-
-export enum VaultTimeUnit {
-  Second = 'SECOND',
-  Minute = 'MINUTE',
-  Hour = 'HOUR',
-  Day = 'DAY',
-  Week = 'WEEK',
-  Month = 'MONTH',
-  Year = 'YEAR'
-}
-
-export enum VaultTermType {
-  Fixed = 'FIXED',
-  Open = 'OPEN'
-}
-
-export enum VaultAccrualMode {
-  PerBalance = 'PER_BALANCE',
-  PerTransaction = 'PER_TRANSACTION'
-}
-
-export enum VaultAccrualMethod {
-  CompoundInterest = 'COMPOUND_INTEREST',
-  SimpleInterest = 'SIMPLE_INTEREST',
-}
-
-export enum VaultProtocolType {
-  Alkemi = 'ALKEMI'
-}
-
-export enum VaultCategory {
-  DeFi = 'DEFI',
-  Staking = 'STAKING',
-  YieldFarming = 'YIELD_FARMING'
-}
-
-export enum VaultRateType {
-  Fixed = 'FIXED',
-  Stable = 'STABLE',
-  Variable = 'VARIABLE'
-}
+export * from './enums';
+export * from './queryParams';
 
 export interface Interest {
-  accrualMode: VaultAccrualMode;
-  accrualMethod: VaultAccrualMethod;
-  accrualIntervalUnit: VaultTimeUnit;
+  accrualMode: Enums.VaultAccrualMode;
+  accrualMethod: Enums.VaultAccrualMethod;
+  accrualIntervalUnit: Enums.VaultTimeUnit;
   accrualInterval: number;
-  rateType: VaultRateType;
+  rateType: Enums.VaultRateType;
   baseAnnualRate: number;
 }
 
 export interface VaultFarmingAsset {
   id: string;
   details?: any;
+
   [propName: string]: any;
 }
 
-export type TransactionType = VaultTypeTransaction.Deposit
-  | VaultTypeTransaction.Withdraw
-  | VaultTypeTransaction.Interest;
+export type TransactionType = Enums.VaultTypeTransaction.Deposit
+  | Enums.VaultTypeTransaction.Withdraw
+  | Enums.VaultTypeTransaction.Interest;
 
 export interface VaultBalance {
   companyId?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  description: string;
+  sequenceId: string;
+  id: string;
   userId: string;
   productId: string;
   assetId: string;
-  accountType: VaultAccountType;
+  accountType: Enums.VaultAccountType;
   balance: BigNumber;
+  accountingClass: Enums.VaultAccountClass,
 }
 
 export interface VaultProduct {
   productId: string;
+  id: string;
   name: string;
   description: string;
   companyId?: string;
@@ -95,30 +55,58 @@ export interface VaultProduct {
   redemptionEnabled: boolean;
   minimumRedemptionAmount?: BigNumber;
   maximumRedemptionAmount?: BigNumber;
-  termType: VaultTermType;
-  termUnit?: VaultTimeUnit;
+  termType: Enums.VaultTermType;
+  termUnit?: Enums.VaultTimeUnit;
   termLength?: number;
   interest?: Interest;
   customData?: any;
-  protocol?: VaultProtocolType;
-  categories?: VaultCategory[];
+  protocol?: Enums.VaultProtocolType;
+  categories?: Enums.VaultCategory[];
   farmingAssets?: VaultFarmingAsset[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
+  dailyThresholdDelay?: string;
+  dailyThresholdRedemptionLimit?: string;
 }
 
 export interface VaultHistory {
+  id: string,
+  parentId?: string,
+  sequenceId: string,
   lendingId: string,
+  accountTypeId: string,
   userId: string,
   productId: string,
   assetId: string,
   amount: BigNumber,
-  comments: string,
+  comments?: string,
   transactionType: TransactionType,
   companyId?: string,
+  detailsId?: string,
   createdAt: Date,
   updatedAt: Date,
   status?: string,
+  externalMetadata?: {
+    interest?: Interest,
+    termType: Enums.VaultTermType;
+    termUnit?: Enums.VaultTimeUnit;
+    termLength?: number;
+  },
+}
+
+export interface VaultPendingTransaction {
+  companyId: string,
+  userId: string,
+  productId: string,
+  assetId: string,
+  amount: string,
+  comments: string,
+  createdAt: Date,
+  updatedAt: Date,
+  id: string,
+  transactionType: TransactionType,
+  status: Enums.VaultTransactionStatus,
+  reason: Enums.VaultTransactionReason
 }
 
 export interface VaultDepositWithdrawPayload {
