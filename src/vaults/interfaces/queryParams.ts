@@ -1,6 +1,20 @@
 import * as Enums from "./enums";
 import { TransactionType } from "./index";
 
+export interface LendingTicketsQuery {
+  companyId?: string,
+  userId?: string,
+  productId?: string,
+  assetId?: string,
+  status?: Enums.LendingTicketStatus,
+  transactionType?: Enums.VaultTypeTransaction,
+  startingRequestDate?: Date | string,
+  endingRequestDate?: Date | string,
+  startingProcessingDate?: Date | string,
+  endingProcessingDate?: Date | string,
+  team?: string,
+}
+
 export interface VaultPendingTransactionQuery {
   companyId?: string,
   userId?: string,

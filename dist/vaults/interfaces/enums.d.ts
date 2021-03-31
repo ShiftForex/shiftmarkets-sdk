@@ -7,6 +7,12 @@ export declare enum VaultTypeTransaction {
     CreditOther = "CREDIT_OTHER",
     DebitOther = "DEBIT_OTHER"
 }
+export declare enum LendingTicketStatus {
+    Open = "open",
+    Blocked = "blocked",
+    Processed = "processed",
+    Cancelled = "cancelled"
+}
 export declare enum VaultTransactionStatus {
     Pending = "PENDING",
     Approved = "APPROVED",

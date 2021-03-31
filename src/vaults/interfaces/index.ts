@@ -39,6 +39,26 @@ export interface VaultBalance {
   accountingClass: Enums.VaultAccountClass,
 }
 
+export interface LendingTicket {
+  id: any,
+  companyId: string,
+  userId: string,
+  productId: string,
+  productName: string,
+  assetId: string,
+  amount: string | BigNumber,
+  status: Enums.LendingTicketStatus,
+  transactionType: Enums.VaultTypeTransaction,
+  transactionId: string,
+  transactionDetails: any,
+  comments: string | Array<string>,
+  requestDate: Date,
+  updatedAt: Date,
+  processingDate: Date,
+  team: string,
+  [optionName: string]: any, // todo temp
+}
+
 export interface VaultProduct {
   productId: string;
   id: string;

@@ -8,6 +8,13 @@ export enum VaultTypeTransaction {
   DebitOther = 'DEBIT_OTHER',
 }
 
+export enum LendingTicketStatus {
+  Open = 'open',
+  Blocked = 'blocked',
+  Processed = 'processed',
+  Cancelled = 'cancelled',
+}
+
 export enum VaultTransactionStatus {
   Pending = 'PENDING',
   Approved = 'APPROVED',

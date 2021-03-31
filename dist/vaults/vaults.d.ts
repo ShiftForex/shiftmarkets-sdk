@@ -1,8 +1,9 @@
 import { SdkService } from "../common/sdk.service";
-import { VaultDepositWithdrawPayload, VaultHistory, VaultBalance, VaultProduct, VaultPendingTransaction, VaultDepositWithdrawResponse, VaultPendingTransactionQuery, VaultHistoryQuery, VaultBalancesQuery, VaultProductsQuery } from "./interfaces";
+import { VaultDepositWithdrawPayload, VaultHistory, VaultBalance, VaultProduct, VaultPendingTransaction, VaultDepositWithdrawResponse, VaultPendingTransactionQuery, VaultHistoryQuery, VaultBalancesQuery, VaultProductsQuery, LendingTicketsQuery, LendingTicket } from "./interfaces";
 export declare class LendingServiceError extends Error {
 }
 export declare class LendingService extends SdkService {
+    getLendingTickets(params?: LendingTicketsQuery): Promise<LendingTicket[]>;
     /**
      * Get lending products
      */
