@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VaultRateType = exports.VaultCategory = exports.VaultProtocolType = exports.VaultAccrualMethod = exports.VaultAccrualMode = exports.VaultTermType = exports.VaultTimeUnit = exports.VaultAccountType = exports.VaultTransactionReason = exports.VaultAccountClass = exports.VaultTransactionStatus = exports.VaultTypeTransaction = void 0;
+exports.VaultRateType = exports.VaultCategory = exports.VaultProtocolType = exports.VaultAccrualMethod = exports.VaultAccrualMode = exports.VaultTermType = exports.VaultTimeUnit = exports.VaultAccountType = exports.VaultTransactionReason = exports.VaultAccountClass = exports.VaultTransactionStatus = exports.LendingTicketStatus = exports.VaultTypeTransaction = void 0;
 var VaultTypeTransaction;
 (function (VaultTypeTransaction) {
     VaultTypeTransaction["Withdraw"] = "LENDING_REDEMPTION";
@@ -11,6 +11,13 @@ var VaultTypeTransaction;
     VaultTypeTransaction["CreditOther"] = "CREDIT_OTHER";
     VaultTypeTransaction["DebitOther"] = "DEBIT_OTHER";
 })(VaultTypeTransaction = exports.VaultTypeTransaction || (exports.VaultTypeTransaction = {}));
+var LendingTicketStatus;
+(function (LendingTicketStatus) {
+    LendingTicketStatus["Open"] = "open";
+    LendingTicketStatus["Blocked"] = "blocked";
+    LendingTicketStatus["Processed"] = "processed";
+    LendingTicketStatus["Cancelled"] = "cancelled";
+})(LendingTicketStatus = exports.LendingTicketStatus || (exports.LendingTicketStatus = {}));
 var VaultTransactionStatus;
 (function (VaultTransactionStatus) {
     VaultTransactionStatus["Pending"] = "PENDING";

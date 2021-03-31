@@ -12,11 +12,17 @@ import {
   VaultHistoryQuery,
   VaultBalancesQuery,
   VaultProductsQuery,
+  LendingTicketsQuery,
+  LendingTicket,
 } from "./interfaces";
 import { fieldToBN } from "../common/field-to-bignumber";
 import { fieldToDate } from "../common/field-to-date";
 
 const debug = debugFactory("ClientSDK:LendingService");
+const baseGetRequestConfig = {
+  timeout: 15000,
+  method: "GET" as "GET",
+}
 export class LendingServiceError extends Error { }
 
 async function lendingServiceRequest(request: AxiosRequestConfig, token?: string) {
@@ -39,15 +45,27 @@ async function lendingServiceRequest(request: AxiosRequestConfig, token?: string
 }
 
 export class LendingService extends SdkService {
+  async getLendingTickets(params: LendingTicketsQuery = {}): Promise<LendingTicket[]> {
+    const request = {
+      url: `${this.config.lending_api_url}/tickets`,
+      params: { exchange: this.exchange, ...params },
+      ...baseGetRequestConfig,
+    }
+    const response = await lendingServiceRequest(request, this.accessToken) as LendingTicket[];
+    response.forEach(ticket => {
+      fieldToBN(ticket, 'amount');
+    });
+    return response;
+  }
+
   /**
    * Get lending products
    */
   async getLendingProducts(params: VaultProductsQuery = {}): Promise<VaultProduct[]> {
     const request = {
       url: `${this.config.lending_api_url}/products`,
-      method: "GET" as "GET",
       params: { exchange: this.exchange, ...params },
-      timeout: 15000,
+      ...baseGetRequestConfig,
     };
     const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct[];
     response.forEach(product => {
@@ -67,9 +85,8 @@ export class LendingService extends SdkService {
   async getLendingBalances(params: VaultBalancesQuery = {}): Promise<VaultBalance[]> {
     const request = {
       url: `${this.config.lending_api_url}/lending/balances`,
-      method: "GET" as "GET",
       params: { exchange: this.exchange, ...params },
-      timeout: 15000,
+      ...baseGetRequestConfig,
     };
     const response = await lendingServiceRequest(request, this.accessToken) as VaultBalance[];
     response.forEach(balance => fieldToBN(balance, 'balance'));
@@ -82,9 +99,8 @@ export class LendingService extends SdkService {
   async getLendingHistory(params: VaultHistoryQuery = {}): Promise<VaultHistory[]> {
     const request = {
       url: `${this.config.lending_api_url}/lending/history`,
-      method: "GET" as "GET",
       params: { exchange: this.exchange, ...params },
-      timeout: 15000,
+      ...baseGetRequestConfig,
     };
     const response = await lendingServiceRequest(request, this.accessToken) as VaultHistory[];
     response.forEach(lending => {
@@ -101,9 +117,8 @@ export class LendingService extends SdkService {
   async getLendingPendingTransactions(params: VaultPendingTransactionQuery = {}): Promise<VaultPendingTransaction[]> {
     const request = {
       url: `${this.config.lending_api_url}/lending/pending-transactions`,
-      method: "GET" as "GET",
       params: { exchange: this.exchange, ...params },
-      timeout: 15000,
+      ...baseGetRequestConfig,
     };
     const response = await lendingServiceRequest(request, this.accessToken) as VaultPendingTransaction[];
     response.forEach((pendingTransaction: VaultPendingTransaction) => {

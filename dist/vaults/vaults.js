@@ -10,6 +10,10 @@ const sdk_service_1 = require("../common/sdk.service");
 const field_to_bignumber_1 = require("../common/field-to-bignumber");
 const field_to_date_1 = require("../common/field-to-date");
 const debug = debug_1.default("ClientSDK:LendingService");
+const baseGetRequestConfig = {
+    timeout: 15000,
+    method: "GET",
+};
 class LendingServiceError extends Error {
 }
 exports.LendingServiceError = LendingServiceError;
@@ -32,15 +36,26 @@ async function lendingServiceRequest(request, token) {
     }
 }
 class LendingService extends sdk_service_1.SdkService {
+    async getLendingTickets(params = {}) {
+        const request = {
+            url: `${this.config.lending_api_url}/tickets`,
+            params: { exchange: this.exchange, ...params },
+            ...baseGetRequestConfig,
+        };
+        const response = await lendingServiceRequest(request, this.accessToken);
+        response.forEach(ticket => {
+            field_to_bignumber_1.fieldToBN(ticket, 'amount');
+        });
+        return response;
+    }
     /**
      * Get lending products
      */
     async getLendingProducts(params = {}) {
         const request = {
             url: `${this.config.lending_api_url}/products`,
-            method: "GET",
             params: { exchange: this.exchange, ...params },
-            timeout: 15000,
+            ...baseGetRequestConfig,
         };
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach(product => {
@@ -54,9 +69,8 @@ class LendingService extends sdk_service_1.SdkService {
     async getLendingBalances(params = {}) {
         const request = {
             url: `${this.config.lending_api_url}/lending/balances`,
-            method: "GET",
             params: { exchange: this.exchange, ...params },
-            timeout: 15000,
+            ...baseGetRequestConfig,
         };
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach(balance => field_to_bignumber_1.fieldToBN(balance, 'balance'));
@@ -68,9 +82,8 @@ class LendingService extends sdk_service_1.SdkService {
     async getLendingHistory(params = {}) {
         const request = {
             url: `${this.config.lending_api_url}/lending/history`,
-            method: "GET",
             params: { exchange: this.exchange, ...params },
-            timeout: 15000,
+            ...baseGetRequestConfig,
         };
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach(lending => {
@@ -86,9 +99,8 @@ class LendingService extends sdk_service_1.SdkService {
     async getLendingPendingTransactions(params = {}) {
         const request = {
             url: `${this.config.lending_api_url}/lending/pending-transactions`,
-            method: "GET",
             params: { exchange: this.exchange, ...params },
-            timeout: 15000,
+            ...baseGetRequestConfig,
         };
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach((pendingTransaction) => {
