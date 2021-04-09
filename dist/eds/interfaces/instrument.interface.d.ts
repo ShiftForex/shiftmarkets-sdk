@@ -13,7 +13,7 @@ export interface Instrument {
     base_product: string;
     quote_product: string;
     quantity_decimals: number;
-    quantity_increment: number;
+    quantity_increment: string;
     price_decimals: number;
     min_quantity: number;
     max_quantity: number;
