@@ -21,6 +21,8 @@ function createSignature($payload)
   return base64_encode($signature);
 }
 
+// Function to verify signature for payload
+// Usually, you don't need this on client side, it is just for demo purpose
 function verifySignature($signature, $payload)
 {
   // Loading API public key 
@@ -41,7 +43,7 @@ $payload = [
 $signature = createSignature(json_encode($payload));
 $headers = [
   "Content-Type: application/json",
-  "API-KEY: " . API_KEY_ID,
+  "API-KEY-ID: " . API_KEY_ID,
   "API-SIGNATURE: " . $signature
 ];
 
