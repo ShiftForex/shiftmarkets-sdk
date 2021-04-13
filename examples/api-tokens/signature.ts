@@ -3,13 +3,13 @@ import NodeRSA from "node-rsa";
 import axios from "axios";
 
 /**
- * Example how to use API keys to generate and validate signature for http requets payload
+ * Example how to use API keys to generate and validate signature for http requests
  * All the keys in this example are for demo purpose only, they will not work on live system
- * Please constact our support to get actual keys
+ * Please contact our support to get actual keys
  */
 const API_KEY_ID = "7c00eeac-306b-6aa0-1181-78d20ff9d982";
-const API_PRIVATE_KEY_FILENAME = "./my_private_api_key.pem";
 const API_PUBLIC_KEY_FILENAME = "./my_public_api_key.pub";
+const API_PRIVATE_KEY_FILENAME = "./my_private_api_key.pem";
 
 // Function to generate signature for payload
 function createSignature(payload: string) {
