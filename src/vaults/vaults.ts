@@ -14,6 +14,8 @@ import {
   VaultProductsQuery,
   LendingTicketsQuery,
   LendingTicket,
+  UpdateVaultProductQuery,
+  CreateVaultProductQuery,
 } from "./interfaces";
 import { fieldToBN } from "../common/field-to-bignumber";
 import { fieldToDate } from "../common/field-to-date";
@@ -44,13 +46,38 @@ async function lendingServiceRequest(request: AxiosRequestConfig, token?: string
   }
 }
 
+const prepareProducts = (products: VaultProduct[]) => {
+  products.forEach(product => {
+    fieldToBN(product,
+        'maximumAllocationAmount',
+        'maximumRedemptionAmount',
+        'minimumAllocationAmount',
+        'minimumRedemptionAmount',
+        'totalBalance');
+  });
+  return products
+}
+
 export class LendingService extends SdkService {
-  async getLendingTickets(params: LendingTicketsQuery = {}): Promise<LendingTicket[]> {
-    const request = {
-      url: `${this.config.lending_api_url}/tickets`,
+  prepareGetRequest(url: string, params: any) {
+    return {
+      url: `${this.config.lending_api_url}/${url}`,
       params: { exchange: this.exchange, ...params },
       ...baseGetRequestConfig,
     }
+  }
+
+  preparePostRequest(url: string, body: any = {}, method = "POST" as "POST" | "PUT") {
+    return {
+      method,
+      url: `${this.config.lending_api_url}/${url}`,
+      timeout: 15000,
+      data: { ...body, exchange: this.exchange },
+    }
+  }
+
+  async getLendingTickets(params: LendingTicketsQuery = {}): Promise<LendingTicket[]> {
+    const request = this.prepareGetRequest('tickets', params);
     const response = await lendingServiceRequest(request, this.accessToken) as LendingTicket[];
     response.forEach(ticket => {
       fieldToBN(ticket, 'amount');
@@ -62,32 +89,34 @@ export class LendingService extends SdkService {
    * Get lending products
    */
   async getLendingProducts(params: VaultProductsQuery = {}): Promise<VaultProduct[]> {
-    const request = {
-      url: `${this.config.lending_api_url}/products`,
-      params: { exchange: this.exchange, ...params },
-      ...baseGetRequestConfig,
-    };
+    const request = this.prepareGetRequest('products', params);
     const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct[];
-    response.forEach(product => {
-      fieldToBN(product,
-        'maximumAllocationAmount',
-        'maximumRedemptionAmount',
-        'minimumAllocationAmount',
-        'minimumRedemptionAmount',
-        'totalBalance');
-    });
-    return response;
+    return prepareProducts(response);
+  }
+
+  /**
+   * Create product
+   */
+  async createLendingProduct(body: CreateVaultProductQuery): Promise<VaultProduct> {
+    const request = this.preparePostRequest(`/products/create`, body);
+    const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct;
+    return prepareProducts([response])[0];
+  }
+
+  /**
+   * Update product
+   */
+  async updateLendingProduct(productId: string, body: UpdateVaultProductQuery = {}): Promise<VaultProduct> {
+    const request = this.preparePostRequest(`/products/update/${productId}`, body, "PUT" as "PUT");
+    const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct;
+    return prepareProducts([response])[0];
   }
 
   /**
    * Get lending balances
    */
   async getLendingBalances(params: VaultBalancesQuery = {}): Promise<VaultBalance[]> {
-    const request = {
-      url: `${this.config.lending_api_url}/lending/balances`,
-      params: { exchange: this.exchange, ...params },
-      ...baseGetRequestConfig,
-    };
+    const request = this.prepareGetRequest('lending/balances', params);
     const response = await lendingServiceRequest(request, this.accessToken) as VaultBalance[];
     response.forEach(balance => fieldToBN(balance, 'balance'));
     return response;
@@ -97,11 +126,7 @@ export class LendingService extends SdkService {
    * Get lending history
    */
   async getLendingHistory(params: VaultHistoryQuery = {}): Promise<VaultHistory[]> {
-    const request = {
-      url: `${this.config.lending_api_url}/lending/history`,
-      params: { exchange: this.exchange, ...params },
-      ...baseGetRequestConfig,
-    };
+    const request = this.prepareGetRequest('lending/history', params);
     const response = await lendingServiceRequest(request, this.accessToken) as VaultHistory[];
     response.forEach(lending => {
       fieldToBN(lending, 'amount');
@@ -115,11 +140,7 @@ export class LendingService extends SdkService {
    * Get lending pending-transaction
    */
   async getLendingPendingTransactions(params: VaultPendingTransactionQuery = {}): Promise<VaultPendingTransaction[]> {
-    const request = {
-      url: `${this.config.lending_api_url}/lending/pending-transactions`,
-      params: { exchange: this.exchange, ...params },
-      ...baseGetRequestConfig,
-    };
+    const request = this.prepareGetRequest('lending/pending-transactions', params);
     const response = await lendingServiceRequest(request, this.accessToken) as VaultPendingTransaction[];
     response.forEach((pendingTransaction: VaultPendingTransaction) => {
       fieldToBN(pendingTransaction, 'amount');
@@ -133,12 +154,7 @@ export class LendingService extends SdkService {
    * Send withdraw
    */
   async redeemLending(body: VaultDepositWithdrawPayload): Promise<VaultDepositWithdrawResponse> {
-    const request = {
-      url: `${this.config.lending_api_url}/lending/redeem`,
-      method: "POST" as "POST",
-      timeout: 15000,
-      data: { ...body, exchange: this.exchange },
-    };
+    const request = this.preparePostRequest('lending/redeem', body);
     const lending = await lendingServiceRequest(request, this.accessToken) as VaultDepositWithdrawResponse;
     fieldToBN(lending, 'amount');
     fieldToDate(lending, 'updatedAt');
@@ -150,13 +166,7 @@ export class LendingService extends SdkService {
    * Send deposit
    */
   async allocateLending(body: VaultDepositWithdrawPayload): Promise<VaultDepositWithdrawResponse> {
-    const request = {
-      url: `${this.config.lending_api_url}/lending/allocate`,
-      method: "POST" as "POST",
-      timeout: 15000,
-      data: { ...body, exchange: this.exchange },
-    };
-
+    const request = this.preparePostRequest('lending/allocate', body);
     const lending = await lendingServiceRequest(request, this.accessToken) as VaultDepositWithdrawResponse;
     fieldToBN(lending, 'amount');
     fieldToDate(lending, 'updatedAt');
