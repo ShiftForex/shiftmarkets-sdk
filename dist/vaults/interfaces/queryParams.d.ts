@@ -1,5 +1,6 @@
 import * as Enums from "./enums";
-import { TransactionType } from "./index";
+import { Interest, TransactionType, VaultFarmingAsset, VaultTimeUnit } from "./index";
+import { BigNumber } from "bignumber.js";
 export interface LendingTicketsQuery {
     companyId?: string;
     userId?: string;
@@ -58,4 +59,62 @@ export interface VaultProductsQuery {
     termType?: Enums.VaultTermType;
     protocol?: Enums.VaultProtocolType;
     category?: Enums.VaultCategory;
+}
+export interface UpdateVaultProductQuery {
+    name?: string;
+    description?: string;
+    companyId?: string;
+    assetId?: string;
+    totalBalance?: BigNumber;
+    tags?: string[];
+    enabled?: boolean;
+    allocationEnabled?: boolean;
+    minimumAllocationAmount?: BigNumber;
+    maximumAllocationAmount?: BigNumber;
+    redemptionEnabled?: boolean;
+    minimumRedemptionAmount?: BigNumber;
+    maximumRedemptionAmount?: BigNumber;
+    termType?: Enums.VaultTermType;
+    termUnit?: Enums.VaultTimeUnit;
+    termLength?: number;
+    interest?: Interest;
+    customData?: any;
+    protocol?: Enums.VaultProtocolType;
+    categories?: Enums.VaultCategory[];
+    farmingAssets?: VaultFarmingAsset[];
+    dailyThresholdDelay?: string;
+    depositAccrualStartsOn?: VaultTimeUnit;
+    depositAccrualStartsOnUnit?: VaultTimeUnit;
+    withdrawAccrualEndsOnUnit?: VaultTimeUnit;
+    dailyThresholdRedemptionLimit?: string;
+}
+export interface CreateVaultProductQuery {
+    id: string;
+    name: string;
+    description: string;
+    assetId: string;
+    totalBalance: BigNumber;
+    allocationEnabled: boolean;
+    redemptionEnabled: boolean;
+    termType: Enums.VaultTermType;
+    dailyThresholdRedemptionLimit?: string;
+    depositAccrualStartsOn: VaultTimeUnit;
+    depositAccrualStartsOnUnit: VaultTimeUnit;
+    withdrawAccrualEndsOnUnit: VaultTimeUnit;
+    withdrawAccrualEndsOn: VaultTimeUnit;
+    companyId?: string;
+    tags?: string[];
+    enabled?: boolean;
+    minimumAllocationAmount?: BigNumber;
+    maximumAllocationAmount?: BigNumber;
+    minimumRedemptionAmount?: BigNumber;
+    maximumRedemptionAmount?: BigNumber;
+    termUnit?: Enums.VaultTimeUnit;
+    termLength?: number;
+    interest?: Interest;
+    customData?: any;
+    protocol?: Enums.VaultProtocolType;
+    categories?: Enums.VaultCategory[];
+    farmingAssets?: VaultFarmingAsset[];
+    dailyThresholdDelay?: string;
 }
