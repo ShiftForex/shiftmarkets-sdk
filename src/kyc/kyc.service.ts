@@ -80,6 +80,7 @@ export class KycService {
     payload: UserProfilePayload,
     userType: 'personal' | 'company',
     isUpdate = false,
+    provider = '',
   ): Promise<UpdateProfileResponse> {
     return kycServiceRequest({
       baseURL: this.config.kyc_api_url,
@@ -93,6 +94,7 @@ export class KycService {
         exchange: this.exchange,
         userType,
         isUpdate,
+        provider,
       },
     });
   }

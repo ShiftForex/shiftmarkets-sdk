@@ -65,7 +65,7 @@ class KycService {
             },
         });
     }
-    updateUserProfile(payload, userType, isUpdate = false) {
+    updateUserProfile(payload, userType, isUpdate = false, provider = '') {
         return kycServiceRequest({
             baseURL: this.config.kyc_api_url,
             url: 'input/schemaform',
@@ -78,6 +78,7 @@ class KycService {
                 exchange: this.exchange,
                 userType,
                 isUpdate,
+                provider,
             },
         });
     }
