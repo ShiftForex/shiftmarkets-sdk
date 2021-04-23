@@ -77,7 +77,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Create product
      */
     async createLendingProduct(body) {
-        const request = this.preparePostRequest(`/products/create`, body);
+        const request = this.preparePostRequest(`products/create`, body);
         const response = await lendingServiceRequest(request, this.accessToken);
         return prepareProducts([response])[0];
     }
@@ -85,7 +85,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Update product
      */
     async updateLendingProduct(productId, body = {}) {
-        const request = this.preparePostRequest(`/products/update/${productId}`, body, "PUT");
+        const request = this.preparePostRequest(`products/update/${productId}`, body, "PUT");
         const response = await lendingServiceRequest(request, this.accessToken);
         return prepareProducts([response])[0];
     }
