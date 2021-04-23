@@ -98,7 +98,7 @@ export class LendingService extends SdkService {
    * Create product
    */
   async createLendingProduct(body: CreateVaultProductQuery): Promise<VaultProduct> {
-    const request = this.preparePostRequest(`/products/create`, body);
+    const request = this.preparePostRequest(`products/create`, body);
     const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct;
     return prepareProducts([response])[0];
   }
@@ -107,7 +107,7 @@ export class LendingService extends SdkService {
    * Update product
    */
   async updateLendingProduct(productId: string, body: UpdateVaultProductQuery = {}): Promise<VaultProduct> {
-    const request = this.preparePostRequest(`/products/update/${productId}`, body, "PUT" as "PUT");
+    const request = this.preparePostRequest(`products/update/${productId}`, body, "PUT" as "PUT");
     const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct;
     return prepareProducts([response])[0];
   }
