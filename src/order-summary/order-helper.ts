@@ -30,7 +30,7 @@ export class OrderHelper {
     quoteQuantity: number
   ): VolumeWeightedAveragePrice => calculateQuoteVWAP(
         action === "sell" ? orderBook.asks : orderBook.bids,
-        quoteQuantity
+        quoteQuantity || 0.1
     );
 
   getPrice = (

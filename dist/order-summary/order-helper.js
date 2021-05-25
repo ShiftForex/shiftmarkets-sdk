@@ -23,7 +23,7 @@ class OrderHelper {
                 price: isFinite(vwapResult.price) && vwapResult.price > 0 ? vwapResult.price : ((_a = orderBook[0]) === null || _a === void 0 ? void 0 : _a.price) || 0
             };
         };
-        this.calculateQuoteQuantityVWAP = (orderBook, action, quoteQuantity) => vwap_1.calculateQuoteVWAP(action === "sell" ? orderBook.asks : orderBook.bids, quoteQuantity);
+        this.calculateQuoteQuantityVWAP = (orderBook, action, quoteQuantity) => vwap_1.calculateQuoteVWAP(action === "sell" ? orderBook.asks : orderBook.bids, quoteQuantity || 0.1);
         this.getPrice = (orderType, calculatedVWAP, limitPrice, stopPrice) => {
             const prices = {
                 [interfaces_1.Types.Market]: calculatedVWAP || 0,
