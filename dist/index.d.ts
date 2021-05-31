@@ -28,7 +28,8 @@ export { OrderSummaryCreator } from './order-summary';
 export declare class SDKv2 {
     exchange: string;
     environment: string;
-    constructor(exchange: string, environment: string);
+    useStagingLending: boolean;
+    constructor(exchange: string, environment: string, useStagingLending?: boolean);
 }
 export interface SDKv2 extends IOrderSummaryCreator, AuthService, ExchangeDataService, WalletIntegrationService, TradeService, NotificationService, KycService, LendingService, SettingsService {
 }
