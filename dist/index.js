@@ -42,14 +42,18 @@ Object.defineProperty(exports, "OrderHelper", { enumerable: true, get: function 
 var order_summary_2 = require("./order-summary");
 Object.defineProperty(exports, "OrderSummaryCreator", { enumerable: true, get: function () { return order_summary_2.OrderSummaryCreator; } });
 class SDKv2 {
-    constructor(exchange, environment) {
+    constructor(exchange, environment, useStagingLending = false) {
         this.exchange = exchange;
         this.environment = environment;
+        this.useStagingLending = useStagingLending;
         this.environment = this.environment.toLowerCase();
         if (!config_1.default[this.environment]) {
             throw new Error(`Unknown environment ${this.environment}`);
         }
         this.config = config_1.default[this.environment];
+        if (useStagingLending) {
+            this.config.lending_api_url = config_1.default.staging.lending_api_url;
+        }
     }
 }
 exports.SDKv2 = SDKv2;

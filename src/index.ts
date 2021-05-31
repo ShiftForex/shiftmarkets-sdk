@@ -46,12 +46,15 @@ export { OrderHelper } from './order-summary/order-helper';
 export { OrderSummaryCreator } from './order-summary';
 
 export class SDKv2 {
-  constructor(public exchange: string, public environment: string) {
+  constructor(public exchange: string, public environment: string, public useStagingLending = false) {
     this.environment = this.environment.toLowerCase();
     if (!config[this.environment as EnvType]) {
       throw new Error(`Unknown environment ${this.environment}`);
     }
     this.config = config[this.environment as EnvType];
+    if (useStagingLending) {
+      this.config.lending_api_url = config.staging.lending_api_url;
+    }
   }
 }
 export interface SDKv2
