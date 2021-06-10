@@ -58,7 +58,7 @@ export class GeoService extends SdkService {
       url: `${this.config.geo_api_url}/countries`,
       method: 'GET',
       headers: {
-        'authorization': 'Bearer 421aa90e079fa326b6494f812ad13e79',
+        'authorization': `Bearer ${this.accessToken}`,
       },
     }) as Location;
   }
