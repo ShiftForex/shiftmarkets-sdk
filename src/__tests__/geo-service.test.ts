@@ -12,7 +12,6 @@ beforeAll(() => {
   sdk = new SDKv2(exchange, environment);
 });
 
-// NOTE: this test takes a few seconds so test it with --detectOpenHandles flag
 test(
   "sdk.getCurrentLocation",
   async () => {
