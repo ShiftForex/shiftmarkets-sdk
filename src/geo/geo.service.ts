@@ -1,9 +1,9 @@
-import debugFactory from 'debug';
-import axios, { AxiosRequestConfig } from 'axios';
+import debugFactory from "debug";
+import axios, { AxiosRequestConfig } from "axios";
 
-import { SdkService } from '../common/sdk.service';
+import { SdkService } from "../common/sdk.service";
 
-const debug = debugFactory('ClientSDK:GEOService');
+const debug = debugFactory("ClientSDK:GEOService");
 
 export interface Location {
   ip: string;
@@ -52,13 +52,14 @@ export async function geoServiceRequest(
 export class GeoService extends SdkService {
   /**
    * Get current location
+   * @param geoAccessToken access_token which is specific for this method
    */
-  async getCurrentLocation(): Promise<Location> {
+  async getCurrentLocation(geoAccessToken: string): Promise<Location> {
     return await geoServiceRequest({
       url: `${this.config.geo_api_url}/countries`,
-      method: 'GET',
+      method: "GET",
       headers: {
-        'authorization': `Bearer ${this.accessToken}`,
+        "authorization": `Bearer ${geoAccessToken}`,
       },
     }) as Location;
   }

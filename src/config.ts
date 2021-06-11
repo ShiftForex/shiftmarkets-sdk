@@ -13,7 +13,7 @@ export default {
     kyc_api_url: "https://kyc-integration.cryptosrvc.com/api",
     settings_api_url: "https://api.cryptosrvc.com/user-settings",
     lending_api_url: "https://lending-service.cryptosrvc.com/v1",
-    geo_api_url: 'https://geo.shiftcrypto.com/api/v1',
+    geo_api_url: "https://geo.shiftcrypto.com/api/v1",
   },
   staging: {
     auth_api_url: "https://authentication-staging.cryptosrvc.com/api",
@@ -32,6 +32,6 @@ export default {
     kyc_api_url: "https://kyc-integration-staging.cryptosrvc.com/api",
     settings_api_url: "https://sandbox.shiftmarkets.com/user-settings",
     lending_api_url: "https://lending-service.cryptosrvc-staging.com/v1",
-    geo_api_url: 'https://geo.shiftcrypto.com/api/v1',
+    geo_api_url: "https://geo.shiftcrypto.com/api/v1",
   },
 };
