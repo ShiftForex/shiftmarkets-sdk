@@ -17,7 +17,6 @@ test(
   "sdk.getCurrentLocation",
   async () => {
     const location = await sdk.getCurrentLocation(geoAccessToken);
-    console.log(location);
   },
   15000,
 );
