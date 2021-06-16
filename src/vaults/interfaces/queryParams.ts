@@ -125,3 +125,23 @@ export interface CreateVaultProductQuery {
   farmingAssets?: VaultFarmingAsset[];
   dailyThresholdDelay?: string;
 }
+
+
+export interface Pager {
+  pager_offset: number,
+  pager_limit: number,
+  pager_total_rows: number,
+}
+
+export interface IWithPager<T = any> extends Pager {
+  items: Array<T>,
+}
+
+export type WithPager<T = any> = IWithPager<T>;
+
+export interface IWithPagerParams {
+  limit?: number,
+  offset?: number,
+}
+
+export type WithPagerParams<T> = T & IWithPagerParams;

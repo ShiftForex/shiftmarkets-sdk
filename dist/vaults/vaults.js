@@ -57,10 +57,24 @@ class LendingService extends sdk_service_1.SdkService {
             data: { ...body, exchange: this.exchange },
         };
     }
+    /**
+     * Get lending tickets
+     */
     async getLendingTickets(params = {}) {
         const request = this.prepareGetRequest('tickets', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach(ticket => {
+            field_to_bignumber_1.fieldToBN(ticket, 'amount');
+        });
+        return response;
+    }
+    /**
+     * Get lending tickets pagination
+     */
+    async getLendingTicketsPager(params = {}) {
+        const request = this.prepareGetRequest('tickets/pagination', params);
+        const response = await lendingServiceRequest(request, this.accessToken);
+        response.items.forEach(ticket => {
             field_to_bignumber_1.fieldToBN(ticket, 'amount');
         });
         return response;
@@ -99,12 +113,34 @@ class LendingService extends sdk_service_1.SdkService {
         return response;
     }
     /**
+     * Get lending balances pagination
+     */
+    async getLendingBalancesPager(params = {}) {
+        const request = this.prepareGetRequest('lending/balances/pagination', params);
+        const response = await lendingServiceRequest(request, this.accessToken);
+        response.items.forEach(balance => field_to_bignumber_1.fieldToBN(balance, 'balance'));
+        return response;
+    }
+    /**
      * Get lending history
      */
     async getLendingHistory(params = {}) {
         const request = this.prepareGetRequest('lending/history', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach(lending => {
+            field_to_bignumber_1.fieldToBN(lending, 'amount');
+            field_to_date_1.fieldToDate(lending, 'updatedAt');
+            field_to_date_1.fieldToDate(lending, 'createdAt');
+        });
+        return response;
+    }
+    /**
+     * Get lending history pagination
+     */
+    async getLendingHistoryPager(params = {}) {
+        const request = this.prepareGetRequest('lending/history/pagination', params);
+        const response = await lendingServiceRequest(request, this.accessToken);
+        response.items.forEach(lending => {
             field_to_bignumber_1.fieldToBN(lending, 'amount');
             field_to_date_1.fieldToDate(lending, 'updatedAt');
             field_to_date_1.fieldToDate(lending, 'createdAt');

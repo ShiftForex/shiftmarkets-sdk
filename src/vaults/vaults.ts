@@ -16,6 +16,8 @@ import {
   LendingTicket,
   UpdateVaultProductQuery,
   CreateVaultProductQuery,
+  WithPager,
+  WithPagerParams,
 } from "./interfaces";
 import { fieldToBN } from "../common/field-to-bignumber";
 import { fieldToDate } from "../common/field-to-date";
@@ -76,10 +78,25 @@ export class LendingService extends SdkService {
     }
   }
 
+  /**
+   * Get lending tickets
+   */
   async getLendingTickets(params: LendingTicketsQuery = {}): Promise<LendingTicket[]> {
     const request = this.prepareGetRequest('tickets', params);
     const response = await lendingServiceRequest(request, this.accessToken) as LendingTicket[];
     response.forEach(ticket => {
+      fieldToBN(ticket, 'amount');
+    });
+    return response;
+  }
+
+  /**
+   * Get lending tickets pagination
+   */
+  async getLendingTicketsPager(params: WithPagerParams<LendingTicketsQuery> = {}): Promise<WithPager<LendingTicket>> {
+    const request = this.prepareGetRequest('tickets/pagination', params);
+    const response = await lendingServiceRequest(request, this.accessToken) as WithPager<LendingTicket>;
+    response.items.forEach(ticket => {
       fieldToBN(ticket, 'amount');
     });
     return response;
@@ -123,12 +140,36 @@ export class LendingService extends SdkService {
   }
 
   /**
+   * Get lending balances pagination
+   */
+  async getLendingBalancesPager(params: WithPagerParams<VaultBalancesQuery> = {}): Promise<WithPager<VaultBalance>> {
+    const request = this.prepareGetRequest('lending/balances/pagination', params);
+    const response = await lendingServiceRequest(request, this.accessToken) as WithPager<VaultBalance>;
+    response.items.forEach(balance => fieldToBN(balance, 'balance'));
+    return response;
+  }
+
+  /**
    * Get lending history
    */
   async getLendingHistory(params: VaultHistoryQuery = {}): Promise<VaultHistory[]> {
     const request = this.prepareGetRequest('lending/history', params);
     const response = await lendingServiceRequest(request, this.accessToken) as VaultHistory[];
     response.forEach(lending => {
+      fieldToBN(lending, 'amount');
+      fieldToDate(lending, 'updatedAt');
+      fieldToDate(lending, 'createdAt');
+    });
+    return response;
+  }
+
+  /**
+   * Get lending history pagination
+   */
+  async getLendingHistoryPager(params: WithPagerParams<VaultHistoryQuery> = {}): Promise<WithPager<VaultHistory>> {
+    const request = this.prepareGetRequest('lending/history/pagination', params);
+    const response = await lendingServiceRequest(request, this.accessToken) as WithPager<VaultHistory>;
+    response.items.forEach(lending => {
       fieldToBN(lending, 'amount');
       fieldToDate(lending, 'updatedAt');
       fieldToDate(lending, 'createdAt');
