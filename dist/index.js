@@ -21,6 +21,7 @@ const kyc_service_1 = require("./kyc/kyc.service");
 const trade_service_1 = require("./trade/trade.service");
 const notification_service_1 = require("./notification/notification.service");
 const settings_service_1 = require("./settings/settings-service");
+const geo_service_1 = require("./geo/geo.service");
 const vaults_1 = require("./vaults/vaults");
 const apply_mixins_helper_1 = require("./common/apply-mixins.helper");
 const order_summary_1 = require("./order-summary");
@@ -67,5 +68,6 @@ apply_mixins_helper_1.applyMixins(SDKv2, [
     kyc_service_1.KycService,
     vaults_1.LendingService,
     settings_service_1.SettingsService,
+    geo_service_1.GeoService,
 ]);
 //# sourceMappingURL=index.js.map
