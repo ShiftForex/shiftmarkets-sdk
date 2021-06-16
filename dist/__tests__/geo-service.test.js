@@ -9,7 +9,6 @@ let sdk;
 beforeAll(() => {
     sdk = new __1.SDKv2(exchange, environment);
 });
-// NOTE: this test takes a few seconds so test it with --detectOpenHandles flag
 test("sdk.getCurrentLocation", async () => {
     const location = await sdk.getCurrentLocation(geoAccessToken);
 }, 15000);
