@@ -6,6 +6,7 @@ import { TradeService } from "./trade/trade.service";
 import { NotificationService } from "./notification/notification.service";
 import { SettingsService } from "./settings/settings-service";
 import { GeoService } from "./geo/geo.service";
+import { WyreService } from "./wyre/wyreService";
 import { LendingService } from "./vaults/vaults";
 import { applyMixins } from "./common/apply-mixins.helper";
 import { IOrderSummaryCreator, OrderSummaryCreator } from "./order-summary";
@@ -69,6 +70,7 @@ export interface SDKv2
   KycService,
   LendingService,
   SettingsService,
+  WyreService,
   GeoService { }
 
 applyMixins(SDKv2, [
@@ -81,5 +83,6 @@ applyMixins(SDKv2, [
   KycService,
   LendingService,
   SettingsService,
+  WyreService,
   GeoService,
 ]);

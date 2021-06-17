@@ -13,6 +13,7 @@ declare const _default: {
         settings_api_url: string;
         lending_api_url: string;
         geo_api_url: string;
+        wyre_api_url: string;
     };
     staging: {
         auth_api_url: string;
@@ -28,6 +29,7 @@ declare const _default: {
         settings_api_url: string;
         lending_api_url: string;
         geo_api_url: string;
+        wyre_api_url: string;
     };
 };
 export default _default;
