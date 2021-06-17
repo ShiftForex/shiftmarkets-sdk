@@ -6,6 +6,7 @@ import { TradeService } from "./trade/trade.service";
 import { NotificationService } from "./notification/notification.service";
 import { SettingsService } from "./settings/settings-service";
 import { GeoService } from "./geo/geo.service";
+import { WyreService } from "./wyre/wyreService";
 import { LendingService } from "./vaults/vaults";
 import { IOrderSummaryCreator } from "./order-summary";
 export { Orderbook } from "./orderbook/orderbook";
@@ -32,5 +33,5 @@ export declare class SDKv2 {
     useStagingLending: boolean;
     constructor(exchange: string, environment: string, useStagingLending?: boolean);
 }
-export interface SDKv2 extends IOrderSummaryCreator, AuthService, ExchangeDataService, WalletIntegrationService, TradeService, NotificationService, KycService, LendingService, SettingsService, GeoService {
+export interface SDKv2 extends IOrderSummaryCreator, AuthService, ExchangeDataService, WalletIntegrationService, TradeService, NotificationService, KycService, LendingService, SettingsService, WyreService, GeoService {
 }

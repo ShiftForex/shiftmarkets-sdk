@@ -14,6 +14,7 @@ export default {
     settings_api_url: "https://api.cryptosrvc.com/user-settings",
     lending_api_url: "https://lending-service.cryptosrvc.com/v1",
     geo_api_url: "https://geo.shiftcrypto.com/api/v1",
+    wyre_api_url: "https://wyre-integration.cryptosrvc.com/v1",
   },
   staging: {
     auth_api_url: "https://authentication-staging.cryptosrvc.com/api",
@@ -33,5 +34,6 @@ export default {
     settings_api_url: "https://sandbox.shiftmarkets.com/user-settings",
     lending_api_url: "https://lending-service.cryptosrvc-staging.com/v1",
     geo_api_url: "https://geo.shiftcrypto.com/api/v1",
+    wyre_api_url: "https://wyre-integration.cryptosrvc-staging.com/v1",
   },
 };
