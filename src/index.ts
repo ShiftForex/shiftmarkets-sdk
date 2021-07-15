@@ -26,6 +26,7 @@ export { TickerRecord } from "./ticker/interfaces/ticker-record.interface";
 export { Chart } from "./chart/chart";
 export { HistoricalBar } from "./chart/interfaces/historical-bar.interface";
 export { Periodicity } from "./chart/interfaces/periodicity.interface";
+export * from "./common/explorer-links.helper";
 
 export {
   Instrument,

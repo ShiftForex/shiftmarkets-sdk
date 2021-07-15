@@ -18,6 +18,7 @@ export { TickerRecord } from "./ticker/interfaces/ticker-record.interface";
 export { Chart } from "./chart/chart";
 export { HistoricalBar } from "./chart/interfaces/historical-bar.interface";
 export { Periodicity } from "./chart/interfaces/periodicity.interface";
+export * from "./common/explorer-links.helper";
 export { Instrument, InstrumentFee, } from "./eds/interfaces/instrument.interface";
 export { Product, ProductType } from "./eds/interfaces/product.interface";
 export { Transaction as WalletTransaction, TransactionStatus as WalletTransactionStatus, TransactionType as WalletTransactionType, } from "./wis/interfaces/transaction.interface";
