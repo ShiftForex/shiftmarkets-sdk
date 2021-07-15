@@ -1,7 +1,7 @@
 export const explorerLinks = {
-    xlm: 'https://stellar.expert/explorer/public',
-    eth: 'https://etherscan.io',
-    btc: 'https://www.blockchain.com/explorer',
+    xlm: 'https://stellar.expert/explorer/public/account',
+    eth: 'https://etherscan.io/address',
+    btc: 'https://www.blockchain.com/btc/address',
 }
 
 export interface ExplorerLinkPayload {
