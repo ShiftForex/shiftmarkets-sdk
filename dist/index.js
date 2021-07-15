@@ -35,6 +35,7 @@ var ticker_1 = require("./ticker/ticker");
 Object.defineProperty(exports, "Ticker", { enumerable: true, get: function () { return ticker_1.Ticker; } });
 var chart_1 = require("./chart/chart");
 Object.defineProperty(exports, "Chart", { enumerable: true, get: function () { return chart_1.Chart; } });
+__exportStar(require("./common/explorer-links.helper"), exports);
 __exportStar(require("./trade/interfaces"), exports);
 __exportStar(require("./kyc/interfaces"), exports);
 __exportStar(require("./vaults/interfaces"), exports);
