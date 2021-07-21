@@ -48,7 +48,7 @@ class KycService {
             params: { exchange: this.exchange },
         });
     }
-    getExtendedProfileSchema(userType, extra = '', isUpdate, provider = '') {
+    getExtendedProfileSchema(userType, extra = '', isUpdate, provider = '', clientUserId = '', domain = '') {
         return kycServiceRequest({
             baseURL: this.config.kyc_api_url,
             url: 'schema/openapi',
@@ -62,6 +62,8 @@ class KycService {
                 extra,
                 isUpdate,
                 provider,
+                clientUserId,
+                domain,
             },
         });
     }
