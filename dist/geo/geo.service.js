@@ -31,13 +31,13 @@ class GeoService extends sdk_service_1.SdkService {
      * @param geoAccessToken access_token which is specific for this method
      */
     async getCurrentLocation(geoAccessToken) {
-        return await geoServiceRequest({
+        return (await geoServiceRequest({
             url: `${this.config.geo_api_url}/countries`,
             method: "GET",
             headers: {
-                "authorization": `Bearer ${geoAccessToken}`,
+                authorization: `Bearer ${geoAccessToken}`,
             },
-        });
+        }));
     }
 }
 exports.GeoService = GeoService;
