@@ -9,7 +9,7 @@ export declare class KycService {
     [x: string]: any;
     getConstants(): Promise<SchemaConstants>;
     getMinimalProfileSchema(): Promise<any>;
-    getExtendedProfileSchema(userType: 'personal' | 'company', extra?: string, isUpdate?: boolean, provider?: string): Promise<any>;
+    getExtendedProfileSchema(userType: 'personal' | 'company', extra?: string, isUpdate?: boolean, provider?: string, clientUserId?: string, domain?: string): Promise<any>;
     updateUserProfile(payload: UserProfilePayload, userType: 'personal' | 'company', isUpdate?: boolean, provider?: string): Promise<UpdateProfileResponse>;
     submitAgreementSignature(payload: SubmitAgreementDto): Promise<ProviderResponseObject>;
     getKycSummary(provider?: string): Promise<KycSummary>;
