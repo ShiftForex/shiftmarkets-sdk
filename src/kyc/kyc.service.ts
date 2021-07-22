@@ -58,7 +58,7 @@ export class KycService {
     extra = '',
     isUpdate?: boolean,
     provider = '',
-    client_user_id = '',
+    clientUserId = '',
   ) {
     return kycServiceRequest({
       baseURL: this.config.kyc_api_url,
@@ -73,7 +73,7 @@ export class KycService {
         extra,
         isUpdate,
         provider,
-        client_user_id,
+        clientUserId,
       },
     });
   }
