@@ -3,18 +3,8 @@ import { VaultDepositWithdrawPayload, VaultHistory, VaultBalance, VaultProduct, 
 export declare class LendingServiceError extends Error {
 }
 export declare class LendingService extends SdkService {
-    prepareGetRequest(url: string, params: any): {
-        timeout: number;
-        method: "GET";
-        url: string;
-        params: any;
-    };
-    preparePostRequest(url: string, body?: any, method?: "POST" | "PUT"): {
-        method: "POST" | "PUT";
-        url: string;
-        timeout: number;
-        data: any;
-    };
+    prepareGetPayload: Function;
+    preparePostPayload: Function;
     /**
      * Get lending tickets
      */

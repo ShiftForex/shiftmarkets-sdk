@@ -41,27 +41,32 @@ const prepareProducts = (products) => {
     });
     return products;
 };
+const prepareGetRequest = (url, exchange) => (endpoint, params) => {
+    return {
+        url: `${url}/${endpoint}`,
+        params: { exchange: exchange, ...params },
+        ...baseGetRequestConfig,
+    };
+};
+const preparePostRequest = (url, exchange) => (endpoint, body = {}, method = "POST") => {
+    return {
+        method,
+        url: `${url}/${endpoint}`,
+        timeout: 15000,
+        data: { ...body, exchange },
+    };
+};
 class LendingService extends sdk_service_1.SdkService {
-    prepareGetRequest(url, params) {
-        return {
-            url: `${this.config.lending_api_url}/${url}`,
-            params: { exchange: this.exchange, ...params },
-            ...baseGetRequestConfig,
-        };
-    }
-    preparePostRequest(url, body = {}, method = "POST") {
-        return {
-            method,
-            url: `${this.config.lending_api_url}/${url}`,
-            timeout: 15000,
-            data: { ...body, exchange: this.exchange },
-        };
+    constructor() {
+        super(...arguments);
+        this.prepareGetPayload = prepareGetRequest(this.config.lending_api_url, this.exchange);
+        this.preparePostPayload = preparePostRequest(this.config.lending_api_url, this.exchange);
     }
     /**
      * Get lending tickets
      */
     async getLendingTickets(params = {}) {
-        const request = this.prepareGetRequest('tickets', params);
+        const request = this.prepareGetPayload('tickets', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach(ticket => {
             field_to_bignumber_1.fieldToBN(ticket, 'amount');
@@ -72,7 +77,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Get lending tickets pagination
      */
     async getLendingTicketsPager(params = {}) {
-        const request = this.prepareGetRequest('tickets/pagination', params);
+        const request = this.prepareGetPayload('tickets/pagination', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.items.forEach(ticket => {
             field_to_bignumber_1.fieldToBN(ticket, 'amount');
@@ -83,7 +88,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Get lending products
      */
     async getLendingProducts(params = {}) {
-        const request = this.prepareGetRequest('products', params);
+        const request = this.prepareGetPayload('products', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         return prepareProducts(response);
     }
@@ -91,7 +96,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Create product
      */
     async createLendingProduct(body) {
-        const request = this.preparePostRequest(`products/create`, body);
+        const request = this.preparePostPayload(`products/create`, body);
         const response = await lendingServiceRequest(request, this.accessToken);
         return prepareProducts([response])[0];
     }
@@ -99,7 +104,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Update product
      */
     async updateLendingProduct(productId, body = {}) {
-        const request = this.preparePostRequest(`products/update/${productId}`, body, "PUT");
+        const request = this.preparePostPayload(`products/update/${productId}`, body, "PUT");
         const response = await lendingServiceRequest(request, this.accessToken);
         return prepareProducts([response])[0];
     }
@@ -107,7 +112,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Get lending balances
      */
     async getLendingBalances(params = {}) {
-        const request = this.prepareGetRequest('lending/balances', params);
+        const request = this.prepareGetPayload('lending/balances', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach(balance => field_to_bignumber_1.fieldToBN(balance, 'balance'));
         return response;
@@ -116,7 +121,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Get lending balances pagination
      */
     async getLendingBalancesPager(params = {}) {
-        const request = this.prepareGetRequest('lending/balances/pagination', params);
+        const request = this.prepareGetPayload('lending/balances/pagination', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.items.forEach(balance => field_to_bignumber_1.fieldToBN(balance, 'balance'));
         return response;
@@ -125,7 +130,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Get lending history
      */
     async getLendingHistory(params = {}) {
-        const request = this.prepareGetRequest('lending/history', params);
+        const request = this.prepareGetPayload('lending/history', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach(lending => {
             field_to_bignumber_1.fieldToBN(lending, 'amount');
@@ -138,7 +143,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Get lending history pagination
      */
     async getLendingHistoryPager(params = {}) {
-        const request = this.prepareGetRequest('lending/history/pagination', params);
+        const request = this.prepareGetPayload('lending/history/pagination', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.items.forEach(lending => {
             field_to_bignumber_1.fieldToBN(lending, 'amount');
@@ -151,7 +156,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Get lending pending-transaction
      */
     async getLendingPendingTransactions(params = {}) {
-        const request = this.prepareGetRequest('lending/pending-transactions', params);
+        const request = this.prepareGetPayload('lending/pending-transactions', params);
         const response = await lendingServiceRequest(request, this.accessToken);
         response.forEach((pendingTransaction) => {
             field_to_bignumber_1.fieldToBN(pendingTransaction, 'amount');
@@ -164,7 +169,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Send withdraw
      */
     async redeemLending(body) {
-        const request = this.preparePostRequest('lending/redeem', body);
+        const request = this.preparePostPayload('lending/redeem', body);
         const lending = await lendingServiceRequest(request, this.accessToken);
         field_to_bignumber_1.fieldToBN(lending, 'amount');
         field_to_date_1.fieldToDate(lending, 'updatedAt');
@@ -175,7 +180,7 @@ class LendingService extends sdk_service_1.SdkService {
      * Send deposit
      */
     async allocateLending(body) {
-        const request = this.preparePostRequest('lending/allocate', body);
+        const request = this.preparePostPayload('lending/allocate', body);
         const lending = await lendingServiceRequest(request, this.accessToken);
         field_to_bignumber_1.fieldToBN(lending, 'amount');
         field_to_date_1.fieldToDate(lending, 'updatedAt');
