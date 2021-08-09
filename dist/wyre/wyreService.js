@@ -30,7 +30,7 @@ async function wyreServiceRequest(request, token) {
     }
 }
 class WyreService extends sdk_service_1.SdkService {
-    prepareGetRequest(url, params) {
+    prepareWyreGetRequest(url, params) {
         return {
             url: `${this.config.wyre_api_url}/${url}`,
             params: { exchange: this.exchange, ...params },
@@ -38,7 +38,7 @@ class WyreService extends sdk_service_1.SdkService {
             method: "GET",
         };
     }
-    preparePostRequest(url, body = {}, method = "POST") {
+    prepareWyrePostRequest(url, body = {}, method = "POST") {
         return {
             method,
             url: `${this.config.wyre_api_url}/${url}`,
@@ -47,15 +47,15 @@ class WyreService extends sdk_service_1.SdkService {
         };
     }
     async getTransactionSchemas(params) {
-        const request = this.prepareGetRequest(`transaction/schemas`, params);
+        const request = this.prepareWyreGetRequest(`transaction/schemas`, params);
         return await wyreServiceRequest(request, this.accessToken);
     }
     async createWyreDeposit(body) {
-        const request = this.preparePostRequest(`deposit/create`, body);
+        const request = this.prepareWyrePostRequest(`deposit/create`, body);
         return await wyreServiceRequest(request, this.accessToken);
     }
     async walletOrderCallback(body) {
-        const request = this.preparePostRequest(`wallet-order-callback`, body);
+        const request = this.prepareWyrePostRequest(`wallet-order-callback`, body);
         return await wyreServiceRequest(request, this.accessToken);
     }
 }

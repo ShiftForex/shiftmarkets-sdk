@@ -3,13 +3,13 @@ import { CreateDepositDto, WalletOrderUpdateDto } from "./interfaces";
 export declare class WyreServiceError extends Error {
 }
 export declare class WyreService extends SdkService {
-    prepareGetRequest(url: string, params: any): {
+    prepareWyreGetRequest(url: string, params: any): {
         url: string;
         params: any;
         timeout: number;
         method: "GET";
     };
-    preparePostRequest(url: string, body?: any, method?: "POST" | "PUT"): {
+    prepareWyrePostRequest(url: string, body?: any, method?: "POST" | "PUT"): {
         method: "POST" | "PUT";
         url: string;
         timeout: number;

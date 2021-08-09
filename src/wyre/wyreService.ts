@@ -26,7 +26,7 @@ async function wyreServiceRequest(request: AxiosRequestConfig, token?: string) {
 }
 
 export class WyreService extends SdkService {
-    prepareGetRequest(url: string, params: any) {
+    prepareWyreGetRequest(url: string, params: any) {
         return {
             url: `${this.config.wyre_api_url}/${url}`,
             params: { exchange: this.exchange, ...params },
@@ -35,7 +35,7 @@ export class WyreService extends SdkService {
         }
     }
 
-    preparePostRequest(url: string, body: any = {}, method = "POST" as "POST" | "PUT") {
+    prepareWyrePostRequest(url: string, body: any = {}, method = "POST" as "POST" | "PUT") {
         return {
             method,
             url: `${this.config.wyre_api_url}/${url}`,
@@ -45,17 +45,17 @@ export class WyreService extends SdkService {
     }
 
     async getTransactionSchemas(params: any): Promise<any> {
-        const request = this.prepareGetRequest(`transaction/schemas`, params);
+        const request = this.prepareWyreGetRequest(`transaction/schemas`, params);
         return await wyreServiceRequest(request, this.accessToken) as any;
     }
 
     async createWyreDeposit(body: CreateDepositDto): Promise<any> {
-        const request = this.preparePostRequest(`deposit/create`, body);
+        const request = this.prepareWyrePostRequest(`deposit/create`, body);
         return await wyreServiceRequest(request, this.accessToken) as any;
     }
 
     async walletOrderCallback(body: WalletOrderUpdateDto): Promise<any> {
-        const request = this.preparePostRequest(`wallet-order-callback`, body);
+        const request = this.prepareWyrePostRequest(`wallet-order-callback`, body);
         return await wyreServiceRequest(request, this.accessToken) as any;
     }
 }
