@@ -45,6 +45,7 @@ export interface OrderSummaryValues {
     currentProduct?: string;
     isSinglePrice?: boolean;
     isQuote: boolean;
+    withTrm: number;
 }
 export interface OrderSummaryPayload {
     commissionAccount: AccountType;
@@ -62,6 +63,7 @@ export interface OrderSummaryPayload {
     baseDecimals: number;
     currentProduct?: string;
     isSinglePrice?: boolean;
+    takerReserveMultiplier?: number;
 }
 export interface OrderSummaryProperties {
     commissionAccount: AccountType;
