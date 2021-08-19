@@ -91,7 +91,7 @@ export declare class WalletIntegrationService {
     /**
      * Get payment options
      */
-    getPaymentRoutes(all?: boolean): Promise<PaymentRouteDto[]>;
+    getPaymentRoutes(all?: boolean, is_development?: boolean): Promise<PaymentRouteDto[]>;
     /**
      * Get payment options
      */
