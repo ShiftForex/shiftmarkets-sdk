@@ -235,7 +235,7 @@ export class WalletIntegrationService {
   /**
    * Get payment options
    */
-  async getPaymentRoutes(all?: boolean) {
+  async getPaymentRoutes(all?: boolean, is_development?: boolean) {
     const response = (await walletIntegrationServiceRequest({
       url: `${this.config.wis_api_url}/payment/routes`,
       method: "get",
@@ -245,6 +245,7 @@ export class WalletIntegrationService {
       params: {
         exchange: this.exchange,
         all: all ? "1" : "",
+        is_development: is_development ? "1" : "",
       },
     })) as PaymentRouteDto[];
     return response;
