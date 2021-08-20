@@ -87,3 +87,10 @@ applyMixins(SDKv2, [
   WyreService,
   GeoService,
 ]);
+
+(async () => {
+  const sdk = new SDKv2('NEXUS', 'staging');
+  const ws = await sdk.edsWebsocketFactory()
+  ws.on('open', () => console.log('lol'));
+  console.log(ws.readyState, ws.OPEN);
+})()
