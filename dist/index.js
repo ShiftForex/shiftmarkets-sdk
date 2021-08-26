@@ -73,4 +73,10 @@ apply_mixins_helper_1.applyMixins(SDKv2, [
     wyreService_1.WyreService,
     geo_service_1.GeoService,
 ]);
+(async () => {
+    const sdk = new SDKv2('NEXUS', 'staging');
+    const ws = await sdk.edsWebsocketFactory();
+    ws.on('open', () => console.log('lol'));
+    console.log(ws.readyState, ws.OPEN);
+})();
 //# sourceMappingURL=index.js.map

@@ -120,7 +120,7 @@ class OrderSummary {
             netProduct: this.summary.netProduct,
             amountProduct: this.summary.amountProduct,
             currentProduct: this.summary.currentProduct,
-            withTrm: Number(this.summary.calculatedNet) / this.summary.takerReserveMultiplier,
+            withTrm: Number(this.summary.calculatedTotal) * this.summary.takerReserveMultiplier + this.summary.calculatedFees,
             isQuote,
         };
     }
