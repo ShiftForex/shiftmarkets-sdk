@@ -17,6 +17,10 @@ export interface SchemaItem {
   form: any;
 }
 
+export interface HeadersItem {
+  [key: string]: string; 
+}
+
 export interface GetSchemaResponseDto {
   success: boolean;
   schemas: SchemaItem[];
@@ -98,13 +102,15 @@ export class WalletIntegrationService {
     schemaData?: any,
     code?: string,
     psp?: string,
-    webhookUrl?: string
+    webhookUrl?: string,
+    additionalHeaders?: HeadersItem,
   ): Promise<Transaction> {
     const trx = (await walletIntegrationServiceRequest({
       url: `${this.config.wis_api_url}/withdraw/create`,
       method: "post",
       headers: {
         Authorization: `Bearer ${this.accessToken}`,
+        ...additionalHeaders,
       },
       data: {
         exchange: this.exchange,
@@ -136,13 +142,15 @@ export class WalletIntegrationService {
     schemaData?: any,
     code?: string,
     psp?: string,
-    webhookUrl?: string
+    webhookUrl?: string,
+    additionalHeaders?: HeadersItem,
   ): Promise<Transaction> {
     const trx = (await walletIntegrationServiceRequest({
       url: `${this.config.wis_api_url}/deposit/create`,
       method: "post",
       headers: {
         Authorization: `Bearer ${this.accessToken}`,
+        ...additionalHeaders,
       },
       data: {
         exchange: this.exchange,

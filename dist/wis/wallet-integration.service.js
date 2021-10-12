@@ -34,12 +34,13 @@ class WalletIntegrationService {
      * @param schemaData
      * @param code
      */
-    async createWithdraw(product, amount, address, schemaName, schemaData, code, psp, webhookUrl) {
+    async createWithdraw(product, amount, address, schemaName, schemaData, code, psp, webhookUrl, additionalHeaders) {
         const trx = (await walletIntegrationServiceRequest({
             url: `${this.config.wis_api_url}/withdraw/create`,
             method: "post",
             headers: {
                 Authorization: `Bearer ${this.accessToken}`,
+                ...additionalHeaders,
             },
             data: {
                 exchange: this.exchange,
@@ -63,12 +64,13 @@ class WalletIntegrationService {
      * @param schemaData
      * @param code
      */
-    async createDeposit(product, amount, schemaName, schemaData, code, psp, webhookUrl) {
+    async createDeposit(product, amount, schemaName, schemaData, code, psp, webhookUrl, additionalHeaders) {
         const trx = (await walletIntegrationServiceRequest({
             url: `${this.config.wis_api_url}/deposit/create`,
             method: "post",
             headers: {
                 Authorization: `Bearer ${this.accessToken}`,
+                ...additionalHeaders,
             },
             data: {
                 exchange: this.exchange,
