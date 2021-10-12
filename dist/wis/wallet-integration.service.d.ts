@@ -7,6 +7,9 @@ export interface SchemaItem {
     schema: string;
     form: any;
 }
+export interface HeadersItem {
+    [key: string]: string;
+}
 export interface GetSchemaResponseDto {
     success: boolean;
     schemas: SchemaItem[];
@@ -60,7 +63,7 @@ export declare class WalletIntegrationService {
      * @param schemaData
      * @param code
      */
-    createWithdraw(product: string, amount: number, address?: string, schemaName?: string, schemaData?: any, code?: string, psp?: string, webhookUrl?: string): Promise<Transaction>;
+    createWithdraw(product: string, amount: number, address?: string, schemaName?: string, schemaData?: any, code?: string, psp?: string, webhookUrl?: string, additionalHeaders?: HeadersItem): Promise<Transaction>;
     /**
      * Create deposit request on Wallet Integration Service
      * @param product
@@ -69,7 +72,7 @@ export declare class WalletIntegrationService {
      * @param schemaData
      * @param code
      */
-    createDeposit(product: string, amount: number, schemaName?: string, schemaData?: any, code?: string, psp?: string, webhookUrl?: string): Promise<Transaction>;
+    createDeposit(product: string, amount: number, schemaName?: string, schemaData?: any, code?: string, psp?: string, webhookUrl?: string, additionalHeaders?: HeadersItem): Promise<Transaction>;
     /**
      * Get wallet transaction by id
      * @param txid
