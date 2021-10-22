@@ -14,6 +14,7 @@ export { NotificationEvents } from "./notification/notification-events";
 export { OrderbookRecord } from "./orderbook/interfaces/orderbook-record.interface";
 export { VolumeWeightedAveragePrice } from "./orderbook/interfaces/volume-weighted-average-price.interface";
 export { Ticker } from "./ticker/ticker";
+export { QuotesAll } from "./ticker/quotes-all";
 export { TickerRecord } from "./ticker/interfaces/ticker-record.interface";
 export { Chart } from "./chart/chart";
 export { HistoricalBar } from "./chart/interfaces/historical-bar.interface";
