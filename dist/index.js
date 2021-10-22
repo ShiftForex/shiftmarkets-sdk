@@ -33,6 +33,8 @@ var notification_events_1 = require("./notification/notification-events");
 Object.defineProperty(exports, "NotificationEvents", { enumerable: true, get: function () { return notification_events_1.NotificationEvents; } });
 var ticker_1 = require("./ticker/ticker");
 Object.defineProperty(exports, "Ticker", { enumerable: true, get: function () { return ticker_1.Ticker; } });
+var quotes_all_1 = require("./ticker/quotes-all");
+Object.defineProperty(exports, "QuotesAll", { enumerable: true, get: function () { return quotes_all_1.QuotesAll; } });
 var chart_1 = require("./chart/chart");
 Object.defineProperty(exports, "Chart", { enumerable: true, get: function () { return chart_1.Chart; } });
 __exportStar(require("./common/explorer-links.helper"), exports);
