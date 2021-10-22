@@ -12,11 +12,13 @@ export declare class QuotesAll {
      * @param ws
      */
     subscribeAll: (ws: WebSocket) => void;
+    unsubscribeAll: () => void;
     /**
      * Subscribe to slow quotes updates over Exchange Data Server websocket
      * @param ws
      */
     subscribeAllSlow: (ws: WebSocket) => void;
+    unsubscribeAllSlow: () => void;
     protected _update: (records: Array<TickerRecord>) => void;
     protected _subscriptionHandler: (msg: string) => void;
 }

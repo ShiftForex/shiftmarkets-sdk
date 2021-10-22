@@ -27,6 +27,18 @@ export class QuotesAll {
         this.ws.on("message", this._subscriptionHandler);
     }
 
+    public unsubscribeAll = () => {
+        if (this.ws) {
+            this.ws.send(
+                JSON.stringify({
+                    type: "unsubscribe",
+                    destination: `/topic/${this.exchange}/quotes-all`,
+                })
+            );
+            this.ws.off("message", this._subscriptionHandler);
+        }
+    }
+
     /**
      * Subscribe to slow quotes updates over Exchange Data Server websocket
      * @param ws
@@ -40,6 +52,18 @@ export class QuotesAll {
             })
         );
         this.ws.on("message", this._subscriptionHandler);
+    }
+
+    public unsubscribeAllSlow = () => {
+        if (this.ws) {
+            this.ws.send(
+                JSON.stringify({
+                    type: "unsubscribe",
+                    destination: `/topic/${this.exchange}/quotes-all-slow`,
+                })
+            );
+            this.ws.off("message", this._subscriptionHandler);
+        }
     }
 
     protected _update = (records: Array<TickerRecord>) => {

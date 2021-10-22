@@ -21,6 +21,15 @@ class QuotesAll {
             }));
             this.ws.on("message", this._subscriptionHandler);
         };
+        this.unsubscribeAll = () => {
+            if (this.ws) {
+                this.ws.send(JSON.stringify({
+                    type: "unsubscribe",
+                    destination: `/topic/${this.exchange}/quotes-all`,
+                }));
+                this.ws.off("message", this._subscriptionHandler);
+            }
+        };
         /**
          * Subscribe to slow quotes updates over Exchange Data Server websocket
          * @param ws
@@ -32,6 +41,15 @@ class QuotesAll {
                 destination: `/topic/${this.exchange}/quotes-all-slow`,
             }));
             this.ws.on("message", this._subscriptionHandler);
+        };
+        this.unsubscribeAllSlow = () => {
+            if (this.ws) {
+                this.ws.send(JSON.stringify({
+                    type: "unsubscribe",
+                    destination: `/topic/${this.exchange}/quotes-all-slow`,
+                }));
+                this.ws.off("message", this._subscriptionHandler);
+            }
         };
         this._update = (records) => {
             if (this.onUpdate) {
