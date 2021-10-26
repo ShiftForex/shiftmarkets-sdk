@@ -57,3 +57,5 @@ node get-settings.js
 [Historical and Current Bars](https://github.com/ShiftForex/shiftmarkets-sdk/blob/master/examples/subscribe-bar-updates-and-get-historical-bars.ts): This example shows how to use the SDK to get historical bars and subscribe to bar updates, before finally unsubscribing. Authentication is not required for these endpoints.
 
 [Tickers and Orderbooks](https://github.com/ShiftForex/shiftmarkets-sdk/blob/master/examples/subscribe-ticker-and-orderbook.ts): In this example, we show how to initiate the SDK against an exchange, then subscribe to a given instrument's ticker and orderbook websocket updates, before unsubscribing after 30 seconds. Authentication is not required for these endpoints.
+
+[Vault transactions](https://github.com/ShiftForex/shiftmarkets-sdk/blob/master/examples/get-vault-transactions.ts): This example shows how to get accrual fees for NXL owner
