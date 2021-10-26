@@ -6,6 +6,8 @@ export enum VaultTypeTransaction {
   DebitCorrection = 'DEBIT_CORRECTION',
   CreditOther = 'CREDIT_OTHER',
   DebitOther = 'DEBIT_OTHER',
+  Fee = 'FEE',
+  Hold = 'HOLD',
 }
 
 export enum LendingTicketStatus {
@@ -36,6 +38,7 @@ export enum VaultAccountType {
   Principal = 'LENDING_PRINCIPAL',
   Interest = 'LENDING_INTEREST',
   Hold = 'HOLD',
+  OperatorFee = 'OPERATOR_FEE',
 }
 
 export enum VaultTimeUnit {

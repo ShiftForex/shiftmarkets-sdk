@@ -138,3 +138,22 @@ export interface VaultDepositWithdrawResponse {
     updatedAt: Date;
     externalMetadata?: any;
 }
+export interface VaultTransactionsResponse {
+    id?: string;
+    accountId: string;
+    companyId?: string;
+    userId: string;
+    productId: string;
+    assetId: string;
+    accountTypeId: string;
+    transactionType: TransactionType;
+    credit?: BigNumber;
+    debit?: BigNumber;
+    balanceBefore: BigNumber;
+    balanceAfter: BigNumber;
+    detailsId?: string;
+    comments?: string;
+    sequenceId?: BigNumber;
+    createdAt?: Date;
+    updatedAt?: Date;
+}

@@ -160,6 +160,28 @@ class LendingService extends sdk_service_1.SdkService {
         });
         return response;
     }
+    async getLendingTransactions(params) {
+        const request = this.prepareVaultsGetRequest('lending/transactions', params);
+        const response = await lendingServiceRequest(request, this.accessToken);
+        response.forEach((tx) => {
+            field_to_bignumber_1.fieldToBN(tx, 'credit');
+            field_to_bignumber_1.fieldToBN(tx, 'debit');
+            field_to_date_1.fieldToDate(tx, 'createdAt');
+            field_to_date_1.fieldToDate(tx, 'updatedAt');
+        });
+        return response;
+    }
+    async getLendingTransactionsPager(params) {
+        const request = this.prepareVaultsGetRequest('lending/transactions/pagination', params);
+        const response = await lendingServiceRequest(request, this.accessToken);
+        response.items.forEach((tx) => {
+            field_to_bignumber_1.fieldToBN(tx, 'credit');
+            field_to_bignumber_1.fieldToBN(tx, 'debit');
+            field_to_date_1.fieldToDate(tx, 'createdAt');
+            field_to_date_1.fieldToDate(tx, 'updatedAt');
+        });
+        return response;
+    }
     /**
      * Send withdraw
      */

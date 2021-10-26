@@ -126,6 +126,19 @@ export interface CreateVaultProductQuery {
   dailyThresholdDelay?: string;
 }
 
+export interface VaultTransactionsQuery {
+  accountId?: string;
+  transactionId?: string;
+  productId?: string;
+  assetId?: string;
+  accountType?: Enums.VaultAccountType;
+  transactionType?: Enums.VaultTypeTransaction;
+  startingCreatedAt?: Date | string;
+  endingCreatedAt?: Date | string;
+  limit?: number;
+  offset?: number;
+  sortDirection?: 'ASC' | 'DESC';
+}
 
 export interface Pager {
   pager_offset: number,

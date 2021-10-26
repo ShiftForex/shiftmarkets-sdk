@@ -10,6 +10,8 @@ var VaultTypeTransaction;
     VaultTypeTransaction["DebitCorrection"] = "DEBIT_CORRECTION";
     VaultTypeTransaction["CreditOther"] = "CREDIT_OTHER";
     VaultTypeTransaction["DebitOther"] = "DEBIT_OTHER";
+    VaultTypeTransaction["Fee"] = "FEE";
+    VaultTypeTransaction["Hold"] = "HOLD";
 })(VaultTypeTransaction = exports.VaultTypeTransaction || (exports.VaultTypeTransaction = {}));
 var LendingTicketStatus;
 (function (LendingTicketStatus) {
@@ -40,6 +42,7 @@ var VaultAccountType;
     VaultAccountType["Principal"] = "LENDING_PRINCIPAL";
     VaultAccountType["Interest"] = "LENDING_INTEREST";
     VaultAccountType["Hold"] = "HOLD";
+    VaultAccountType["OperatorFee"] = "OPERATOR_FEE";
 })(VaultAccountType = exports.VaultAccountType || (exports.VaultAccountType = {}));
 var VaultTimeUnit;
 (function (VaultTimeUnit) {

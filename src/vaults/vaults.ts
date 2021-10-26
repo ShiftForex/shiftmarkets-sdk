@@ -18,6 +18,8 @@ import {
   CreateVaultProductQuery,
   WithPager,
   WithPagerParams,
+  VaultTransactionsQuery,
+  VaultTransactionsResponse,
 } from "./interfaces";
 import { fieldToBN } from "../common/field-to-bignumber";
 import { fieldToDate } from "../common/field-to-date";
@@ -51,11 +53,11 @@ async function lendingServiceRequest(request: AxiosRequestConfig, token?: string
 const prepareProducts = (products: VaultProduct[]) => {
   products.forEach(product => {
     fieldToBN(product,
-        'maximumAllocationAmount',
-        'maximumRedemptionAmount',
-        'minimumAllocationAmount',
-        'minimumRedemptionAmount',
-        'totalBalance');
+      'maximumAllocationAmount',
+      'maximumRedemptionAmount',
+      'minimumAllocationAmount',
+      'minimumRedemptionAmount',
+      'totalBalance');
   });
   return products
 }
@@ -187,6 +189,30 @@ export class LendingService extends SdkService {
       fieldToBN(pendingTransaction, 'amount');
       fieldToDate(pendingTransaction, 'createdAt');
       fieldToDate(pendingTransaction, 'updatedAt');
+    });
+    return response;
+  }
+
+  async getLendingTransactions(params: VaultTransactionsQuery) {
+    const request = this.prepareVaultsGetRequest('lending/transactions', params);
+    const response = await lendingServiceRequest(request, this.accessToken) as VaultTransactionsResponse[];
+    response.forEach((tx) => {
+      fieldToBN(tx, 'credit');
+      fieldToBN(tx, 'debit');
+      fieldToDate(tx, 'createdAt');
+      fieldToDate(tx, 'updatedAt');
+    });
+    return response;
+  }
+
+  async getLendingTransactionsPager(params: VaultTransactionsQuery) {
+    const request = this.prepareVaultsGetRequest('lending/transactions/pagination', params);
+    const response = await lendingServiceRequest(request, this.accessToken) as WithPager<VaultTransactionsResponse>;
+    response.items.forEach((tx) => {
+      fieldToBN(tx, 'credit');
+      fieldToBN(tx, 'debit');
+      fieldToDate(tx, 'createdAt');
+      fieldToDate(tx, 'updatedAt');
     });
     return response;
   }

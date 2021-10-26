@@ -1,5 +1,5 @@
 import { SdkService } from "../common/sdk.service";
-import { VaultDepositWithdrawPayload, VaultHistory, VaultBalance, VaultProduct, VaultPendingTransaction, VaultDepositWithdrawResponse, VaultPendingTransactionQuery, VaultHistoryQuery, VaultBalancesQuery, VaultProductsQuery, LendingTicketsQuery, LendingTicket, UpdateVaultProductQuery, CreateVaultProductQuery, WithPager, WithPagerParams } from "./interfaces";
+import { VaultDepositWithdrawPayload, VaultHistory, VaultBalance, VaultProduct, VaultPendingTransaction, VaultDepositWithdrawResponse, VaultPendingTransactionQuery, VaultHistoryQuery, VaultBalancesQuery, VaultProductsQuery, LendingTicketsQuery, LendingTicket, UpdateVaultProductQuery, CreateVaultProductQuery, WithPager, WithPagerParams, VaultTransactionsQuery, VaultTransactionsResponse } from "./interfaces";
 export declare class LendingServiceError extends Error {
 }
 export declare class LendingService extends SdkService {
@@ -55,6 +55,8 @@ export declare class LendingService extends SdkService {
      * Get lending pending-transaction
      */
     getLendingPendingTransactions(params?: VaultPendingTransactionQuery): Promise<VaultPendingTransaction[]>;
+    getLendingTransactions(params: VaultTransactionsQuery): Promise<VaultTransactionsResponse[]>;
+    getLendingTransactionsPager(params: VaultTransactionsQuery): Promise<WithPager<VaultTransactionsResponse>>;
     /**
      * Send withdraw
      */

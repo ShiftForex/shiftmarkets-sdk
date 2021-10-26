@@ -5,7 +5,9 @@ export declare enum VaultTypeTransaction {
     CreditCorrection = "CREDIT_CORRECTION",
     DebitCorrection = "DEBIT_CORRECTION",
     CreditOther = "CREDIT_OTHER",
-    DebitOther = "DEBIT_OTHER"
+    DebitOther = "DEBIT_OTHER",
+    Fee = "FEE",
+    Hold = "HOLD"
 }
 export declare enum LendingTicketStatus {
     Open = "open",
@@ -30,7 +32,8 @@ export declare enum VaultTransactionReason {
 export declare enum VaultAccountType {
     Principal = "LENDING_PRINCIPAL",
     Interest = "LENDING_INTEREST",
-    Hold = "HOLD"
+    Hold = "HOLD",
+    OperatorFee = "OPERATOR_FEE"
 }
 export declare enum VaultTimeUnit {
     Second = "SECOND",
