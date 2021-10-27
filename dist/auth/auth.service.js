@@ -234,12 +234,12 @@ class AuthService {
     /**
      * Get user preferred MFA settings
      */
-    async getUserMfaSettings() {
+    async getUserMfaSettings(optionalAccessToken) {
         const response = await authServiceRequest({
             url: `${this.config.auth_api_url}/user_authentication/getUserMfaSettings`,
             method: "post",
             data: {
-                exchange: this.exchange,
+                exchange: optionalAccessToken || this.exchange,
                 clientToken: this.accessToken,
             },
             timeout: 15000,
