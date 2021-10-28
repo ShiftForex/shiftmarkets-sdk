@@ -78,7 +78,7 @@ export declare class AuthService {
     /**
      * Get user TOTP secret
      */
-    getTotpSecret(): Promise<string | undefined>;
+    getTotpSecret(optionalAccessToken?: string): Promise<string | undefined>;
 }
 export interface AuthService extends SdkService {
 }
