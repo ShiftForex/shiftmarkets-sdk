@@ -68,7 +68,7 @@ export declare class AuthService {
     /**
      * Get user preferred MFA settings
      */
-    getUserMfaSettings(): Promise<MfaSettingsDto>;
+    getUserMfaSettings(optionalAccessToken?: string): Promise<MfaSettingsDto>;
     /**
      * Turn on or off TOTP for the user
      * @param turnOn
