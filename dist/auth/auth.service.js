@@ -274,13 +274,13 @@ class AuthService {
     /**
      * Get user TOTP secret
      */
-    async getTotpSecret() {
+    async getTotpSecret(optionalAccessToken) {
         const response = await authServiceRequest({
             url: `${this.config.auth_api_url}/user_authentication/requestTOTPSetupCode`,
             method: "post",
             data: {
                 exchange: this.exchange,
-                clientToken: this.accessToken,
+                clientToken: optionalAccessToken || this.accessToken,
             },
             timeout: 15000,
         });
