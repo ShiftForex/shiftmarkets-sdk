@@ -58,7 +58,8 @@ class Ticker {
         }
         const record = frame.payload;
         this.update({
-            instrument: record.pair,
+            /* @ts-ignore */
+            instrument: record.pair || record.instrument,
             bid: parseFloat(record.bid),
             ask: parseFloat(record.ask),
             price_24h_change: parseFloat(record.price_24h_change),

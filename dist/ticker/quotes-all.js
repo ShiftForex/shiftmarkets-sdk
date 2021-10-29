@@ -63,17 +63,20 @@ class QuotesAll {
                 return;
             }
             const records = (frame === null || frame === void 0 ? void 0 : frame.payload) || [];
-            this._update(records.map((record) => ({
-                instrument: record.pair,
-                bid: parseFloat(record.bid),
-                ask: parseFloat(record.ask),
-                price_24h_change: parseFloat(record.price_24h_change),
-                price_24h_max: parseFloat(record.price_24h_max),
-                price_24h_min: parseFloat(record.price_24h_min),
-                volume_24h_change: parseFloat(record.volume_24h_change),
-                volume: record.volume,
-                date_ts: moment_1.default(record.date_ts).toDate(),
-            })));
+            this._update(Array.isArray(records)
+                ? records.map((record) => ({
+                    /* @ts-ignore */
+                    instrument: record.pair || record.instrument,
+                    bid: parseFloat(record.bid),
+                    ask: parseFloat(record.ask),
+                    price_24h_change: parseFloat(record.price_24h_change),
+                    price_24h_max: parseFloat(record.price_24h_max),
+                    price_24h_min: parseFloat(record.price_24h_min),
+                    volume_24h_change: parseFloat(record.volume_24h_change),
+                    volume: record.volume,
+                    date_ts: moment_1.default(record.date_ts).toDate(),
+                }))
+                : records);
         };
     }
 }
