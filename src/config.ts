@@ -28,7 +28,7 @@ export default {
       "wss://ws.cryptosrvc.com/events",
     notification_api_url:
       "https://3b5hneboa4.execute-api.us-east-1.amazonaws.com",
-    kyc_api_url: "https://kyc-integration-staging.cryptosrvc.com/api",
+    kyc_api_url: "https://kyc-integration-service.cryptosrvc-staging.com/api",
     settings_api_url: "https://sandbox.shiftmarkets.com/user-settings",
     lending_api_url: "https://lending-service.cryptosrvc-staging.com/v1",
     geo_api_url: "https://geo-lookup.cryptosrvc-staging.com/api/v1",
