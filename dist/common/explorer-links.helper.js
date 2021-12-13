@@ -6,11 +6,25 @@ exports.explorerLinks = {
     eth: 'https://etherscan.io/address',
     btc: 'https://www.blockchain.com/btc/address',
 };
-exports.getExplorerLink = (payload) => {
+var Networks;
+(function (Networks) {
+    Networks["Stellar"] = "stellar";
+    Networks["Erc20"] = "erc-20";
+    Networks["Ethereum"] = "Ethereum";
+})(Networks || (Networks = {}));
+exports.getExplorerLink = ({ currency, hash, isErc, network, }) => {
     const addHash = (link, hash) => !!link ? `${link.toLowerCase()}/${hash}` : '';
-    const { currency, hash, isErc, } = payload;
-    // @ts-ignore
-    const explorerLink = isErc ? exports.explorerLinks.eth : exports.explorerLinks[currency];
+    let explorerLink = exports.explorerLinks[currency];
+    const networkFormatted = network;
+    console.log(currency, network);
+    if (networkFormatted === Networks.Stellar) {
+        explorerLink = exports.explorerLinks.xlm;
+    }
+    else if (networkFormatted === Networks.Erc20
+        || networkFormatted === Networks.Ethereum
+        || isErc) {
+        explorerLink = exports.explorerLinks.eth;
+    }
     return addHash(explorerLink, hash);
 };
 //# sourceMappingURL=explorer-links.helper.js.map
