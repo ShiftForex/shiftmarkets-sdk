@@ -81,3 +81,8 @@ export enum VaultRateType {
   Stable = 'STABLE',
   Variable = 'VARIABLE'
 }
+
+export enum VaultRateCounting {
+  Basic = 'BASIC',
+  Tier = 'TIER'
+}

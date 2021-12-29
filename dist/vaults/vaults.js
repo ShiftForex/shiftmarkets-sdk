@@ -38,6 +38,11 @@ async function lendingServiceRequest(request, token) {
 const prepareProducts = (products) => {
     products.forEach(product => {
         field_to_bignumber_1.fieldToBN(product, 'maximumAllocationAmount', 'maximumRedemptionAmount', 'minimumAllocationAmount', 'minimumRedemptionAmount', 'totalBalance');
+        if (!Array.isArray(product.tiers))
+            return;
+        product.tiers.forEach((tier) => {
+            field_to_bignumber_1.fieldToBN(tier, 'apr', 'apy', 'tierFrom', 'tierTo');
+        });
     });
     return products;
 };

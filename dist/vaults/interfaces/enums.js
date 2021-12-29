@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VaultRateType = exports.VaultCategory = exports.VaultProtocolType = exports.VaultAccrualMethod = exports.VaultAccrualMode = exports.VaultTermType = exports.VaultTimeUnit = exports.VaultAccountType = exports.VaultTransactionReason = exports.VaultAccountClass = exports.VaultTransactionStatus = exports.LendingTicketStatus = exports.VaultTypeTransaction = void 0;
+exports.VaultRateCounting = exports.VaultRateType = exports.VaultCategory = exports.VaultProtocolType = exports.VaultAccrualMethod = exports.VaultAccrualMode = exports.VaultTermType = exports.VaultTimeUnit = exports.VaultAccountType = exports.VaultTransactionReason = exports.VaultAccountClass = exports.VaultTransactionStatus = exports.LendingTicketStatus = exports.VaultTypeTransaction = void 0;
 var VaultTypeTransaction;
 (function (VaultTypeTransaction) {
     VaultTypeTransaction["Withdraw"] = "LENDING_REDEMPTION";
@@ -85,4 +85,9 @@ var VaultRateType;
     VaultRateType["Stable"] = "STABLE";
     VaultRateType["Variable"] = "VARIABLE";
 })(VaultRateType = exports.VaultRateType || (exports.VaultRateType = {}));
+var VaultRateCounting;
+(function (VaultRateCounting) {
+    VaultRateCounting["Basic"] = "BASIC";
+    VaultRateCounting["Tier"] = "TIER";
+})(VaultRateCounting = exports.VaultRateCounting || (exports.VaultRateCounting = {}));
 //# sourceMappingURL=enums.js.map
