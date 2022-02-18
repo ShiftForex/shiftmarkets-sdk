@@ -27,7 +27,7 @@ exports.default = {
         // notification_ws_url:
         //   "wss://0a0oum2kkj.execute-api.us-east-1.amazonaws.com/dev",
         notification_api_url: "https://3b5hneboa4.execute-api.us-east-1.amazonaws.com",
-        kyc_api_url: "https://kyc-integration-staging.cryptosrvc.com/api",
+        kyc_api_url: "https://kyc-integration.cryptosrvc-staging.com/api",
         settings_api_url: "https://sandbox.shiftmarkets.com/user-settings",
         lending_api_url: "https://lending-service.cryptosrvc-staging.com/v1",
     },
