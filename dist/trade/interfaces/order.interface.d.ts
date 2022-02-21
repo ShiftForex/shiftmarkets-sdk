@@ -15,7 +15,19 @@ export declare enum ProductType {
 export declare type OrderSide = "sell" | "buy";
 export declare type OrderType = "limit" | "market" | "stop" | "stop_limit";
 export declare type OrderTimeInForce = "ioc" | "fok" | "gtc" | "gtd" | "day" | "ato" | "atc" | "gtcrs";
-export declare type OrderStatus = "new" | "rejected" | "canceled" | "replaced" | "partially_filled" | "completely_filled" | "expired" | "pending_new" | "pending_cancel" | "pending_replace" | "suspended";
+export declare enum OrderStatuses {
+    New = "new",
+    PartiallyFilled = "partially_filled",
+    PendingNew = "pending_new",
+    PendingCancel = "pending_cancel",
+    PendingReplace = "pending_replace",
+    CompletelyFilled = "completely_filled",
+    Rejected = "rejected",
+    Canceled = "canceled",
+    Replaced = "replaced",
+    Expired = "expired",
+    Suspended = "suspended"
+}
 import { AccountTransaction } from "./transactions.interface";
 export interface Order {
     id: string;
@@ -23,7 +35,7 @@ export interface Order {
     instrument_id: string;
     type: OrderType;
     side: OrderSide;
-    status: OrderStatus;
+    status: OrderStatuses;
     quantity: number;
     executed_quantity: number;
     average_price?: number;

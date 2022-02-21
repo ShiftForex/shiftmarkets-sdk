@@ -1,4 +1,4 @@
-import type { OrderStatus } from '../../trade/interfaces';
+import type { OrderStatuses } from '../../trade/interfaces';
 export declare enum TradeSocketEvents {
     DepositNew = "DepositNew",
     DepositFailed = "DepositFailed",
@@ -24,7 +24,7 @@ export interface Notification {
     source: string;
     date: Date;
     id: string;
-    status: OrderStatus;
+    status: OrderStatuses;
     reason: string;
     read?: boolean;
     timestamp?: Date;

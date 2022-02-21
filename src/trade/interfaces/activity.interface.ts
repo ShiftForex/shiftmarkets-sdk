@@ -1,4 +1,4 @@
-import { OrderSide, OrderType, OrderStatus } from "./order.interface";
+import { OrderSide, OrderType, OrderStatuses } from "./order.interface";
 
 export interface ActivityTransaction {
   entity_type: "DEPOSIT" | "WITHDRAW";
@@ -13,7 +13,7 @@ export interface ActivityTransaction {
 export interface ActivityOrder {
   entity_type: "ORDER";
   instrument_id: string;
-  status: OrderStatus;
+  status: OrderStatuses;
   type: OrderType;
   side: OrderSide;
   quantity: number;
