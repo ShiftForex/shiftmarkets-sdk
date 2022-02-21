@@ -2,6 +2,7 @@ import { SdkService } from "../common/sdk.service";
 import WebSocket from "isomorphic-ws";
 import debugFactory from "debug";
 import axios, { AxiosRequestConfig } from "axios";
+import { Notification } from './interfaces';
 
 const debug = debugFactory("ClientSDK:NotificationService");
 
@@ -33,6 +34,32 @@ export default interface Listener<T> {
 }
 
 export class NotificationService {
+
+  getNotifications(): Promise<Notification[]> {
+    return notificationServiceRequest({
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      },
+      baseURL: this.config.notification_api_url,
+      url: 'user/notifications',
+      method: 'get',
+      data: null,
+    });
+  }
+
+  markNotificationsRead(ids: Notification['id'][]): Promise<void> {
+    return notificationServiceRequest({
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      },
+      baseURL: this.config.notification_api_url,
+      url: 'user/notifications/read',
+      method: 'post',
+      data: {
+        ids,
+      },
+    });
+  }
 
   registerPushToken(token: string): Promise<null> {
     return notificationServiceRequest({

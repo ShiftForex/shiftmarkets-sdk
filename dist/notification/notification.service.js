@@ -34,6 +34,30 @@ async function notificationServiceRequest(request) {
 }
 exports.notificationServiceRequest = notificationServiceRequest;
 class NotificationService {
+    getNotifications() {
+        return notificationServiceRequest({
+            headers: {
+                Authorization: `Bearer ${this.accessToken}`
+            },
+            baseURL: this.config.notification_api_url,
+            url: 'user/notifications',
+            method: 'get',
+            data: null,
+        });
+    }
+    markNotificationsRead(ids) {
+        return notificationServiceRequest({
+            headers: {
+                Authorization: `Bearer ${this.accessToken}`
+            },
+            baseURL: this.config.notification_api_url,
+            url: 'user/notifications/read',
+            method: 'post',
+            data: {
+                ids,
+            },
+        });
+    }
     registerPushToken(token) {
         return notificationServiceRequest({
             headers: {

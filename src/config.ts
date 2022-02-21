@@ -9,7 +9,7 @@ export default {
     rfq_sls_url: "https://rfq.cryptosrvc.com/v1",
     notification_ws_url:
       "wss://ws.cryptosrvc.com/events",
-    notification_api_url: "",
+    notification_api_url: "https://wge5l96qc0.execute-api.us-east-1.amazonaws.com",
     kyc_api_url: "https://kyc-integration.cryptosrvc.com/api",
     settings_api_url: "https://api.cryptosrvc.com/user-settings",
     lending_api_url: "https://lending-service.cryptosrvc.com/v1",
