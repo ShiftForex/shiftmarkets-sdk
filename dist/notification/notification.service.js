@@ -33,56 +33,67 @@ async function notificationServiceRequest(request) {
     }
 }
 exports.notificationServiceRequest = notificationServiceRequest;
+var NotificationsEndpoints;
+(function (NotificationsEndpoints) {
+    NotificationsEndpoints["GetNotifications"] = "user/notifications";
+    NotificationsEndpoints["MarkNotificationsRead"] = "user/notifications/read";
+    NotificationsEndpoints["RegisterPushToken"] = "push/register-token";
+    NotificationsEndpoints["RemovePushToken"] = "push/remove-token";
+})(NotificationsEndpoints || (NotificationsEndpoints = {}));
 class NotificationService {
-    getNotifications() {
-        return notificationServiceRequest({
+    async getNotifications() {
+        const response = await notificationServiceRequest({
             headers: {
                 Authorization: `Bearer ${this.accessToken}`
             },
             baseURL: this.config.notification_api_url,
-            url: 'user/notifications',
-            method: 'get',
+            url: NotificationsEndpoints.GetNotifications,
+            method: 'GET',
             data: null,
         });
+        return response;
     }
-    markNotificationsRead(ids) {
-        return notificationServiceRequest({
+    async markNotificationsRead(ids) {
+        const response = notificationServiceRequest({
             headers: {
                 Authorization: `Bearer ${this.accessToken}`
             },
             baseURL: this.config.notification_api_url,
-            url: 'user/notifications/read',
-            method: 'post',
+            url: NotificationsEndpoints.MarkNotificationsRead,
+            method: 'POST',
             data: {
                 ids,
             },
         });
+        return response;
     }
-    registerPushToken(token) {
-        return notificationServiceRequest({
+    async registerPushToken(token) {
+        const response = notificationServiceRequest({
             headers: {
                 Authorization: `Bearer ${this.accessToken}`
             },
             baseURL: this.config.notification_api_url,
-            url: 'push/register-token',
-            method: 'post',
+            url: NotificationsEndpoints.RegisterPushToken,
+            method: 'POST',
             data: {
                 token,
             }
         });
+        return response;
     }
-    removePushToken(token) {
-        return notificationServiceRequest({
+    async removePushToken(token) {
+        const response = notificationServiceRequest({
             headers: {
                 Authorization: `Bearer ${this.accessToken}`
             },
             baseURL: this.config.notification_api_url,
-            url: 'push/remove-token',
-            method: 'post',
+            url: NotificationsEndpoints.RemovePushToken,
+            method: 'POST',
             data: {
                 token,
             }
         });
+        return response;
     }
     notificationWebsocketFactory(timeout = 15000) {
         return new Promise((resolve, reject) => {
