@@ -12,7 +12,9 @@ export default interface Listener<T> {
     (data: T): void;
 }
 export declare class NotificationService {
-    getNotifications(): Promise<Notification[]>;
+    getNotifications(): Promise<{
+        notifications: Notification[];
+    }>;
     markNotificationsRead(ids: Notification['id'][]): Promise<void>;
     registerPushToken(token: string): Promise<null>;
     removePushToken(token: string): Promise<null>;
