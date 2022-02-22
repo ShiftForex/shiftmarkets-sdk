@@ -35,7 +35,7 @@ export default interface Listener<T> {
 
 export class NotificationService {
 
-  getNotifications(): Promise<Notification[]> {
+  getNotifications(): Promise<{ notifications: Notification[] }> {
     return notificationServiceRequest({
       headers: {
         Authorization: `Bearer ${this.accessToken}`
