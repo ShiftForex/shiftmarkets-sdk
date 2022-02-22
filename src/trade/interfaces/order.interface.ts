@@ -23,18 +23,20 @@ export type OrderTimeInForce =
   | "ato"
   | "atc"
   | "gtcrs";
-export type OrderStatus =
-  | "new"
-  | "rejected"
-  | "canceled"
-  | "replaced"
-  | "partially_filled"
-  | "completely_filled"
-  | "expired"
-  | "pending_new"
-  | "pending_cancel"
-  | "pending_replace"
-  | "suspended";
+
+export enum OrderStatuses {
+  New = 'new',
+  PartiallyFilled = 'partially_filled',
+  PendingNew = 'pending_new',
+  PendingCancel = 'pending_cancel',
+  PendingReplace = 'pending_replace',
+  CompletelyFilled = 'completely_filled',
+  Rejected = 'rejected',
+  Canceled = 'canceled',
+  Replaced = 'replaced',
+  Expired = 'expired',
+  Suspended = 'suspended',
+}
 
 import { AccountTransaction } from "./transactions.interface";
 
@@ -44,7 +46,7 @@ export interface Order {
   instrument_id: string;
   type: OrderType;
   side: OrderSide;
-  status: OrderStatus;
+  status: OrderStatuses;
   quantity: number;
   executed_quantity: number;
   average_price?: number;
@@ -65,7 +67,7 @@ export interface Order {
   };
 }
 
-export interface OrderCSV extends Order {}
+export interface OrderCSV extends Order { }
 
 export interface OrderPagedFilter {
   sort_direction?: "asc" | "desc";

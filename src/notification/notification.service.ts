@@ -2,6 +2,7 @@ import { SdkService } from "../common/sdk.service";
 import WebSocket from "isomorphic-ws";
 import debugFactory from "debug";
 import axios, { AxiosRequestConfig } from "axios";
+import { Notification } from './interfaces';
 
 const debug = debugFactory("ClientSDK:NotificationService");
 
@@ -32,34 +33,75 @@ export default interface Listener<T> {
   (data: T): void;
 }
 
+enum NotificationsEndpoints {
+  GetNotifications = 'user/notifications',
+  MarkNotificationsRead = 'user/notifications/read',
+  RegisterPushToken = 'push/register-token',
+  RemovePushToken = 'push/remove-token',
+}
+
 export class NotificationService {
 
-  registerPushToken(token: string): Promise<null> {
-    return notificationServiceRequest({
+  async getNotifications(): Promise<{ notifications: Notification[] }> {
+    const response = await notificationServiceRequest({
       headers: {
         Authorization: `Bearer ${this.accessToken}`
       },
       baseURL: this.config.notification_api_url,
-      url: 'push/register-token',
-      method: 'post',
-      data: {
-        token,
-      }
+      url: NotificationsEndpoints.GetNotifications,
+      method: 'GET',
+      data: null,
     });
+
+    return response;
   }
 
-  removePushToken(token: string): Promise<null> {
-    return notificationServiceRequest({
+  async markNotificationsRead(ids: Notification['id'][]): Promise<void> {
+    const response = notificationServiceRequest({
       headers: {
         Authorization: `Bearer ${this.accessToken}`
       },
       baseURL: this.config.notification_api_url,
-      url: 'push/remove-token',
-      method: 'post',
+      url: NotificationsEndpoints.MarkNotificationsRead,
+      method: 'POST',
+      data: {
+        ids,
+      },
+    });
+
+    return response;
+  }
+
+  async registerPushToken(token: string): Promise<null> {
+    const response = notificationServiceRequest({
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      },
+      baseURL: this.config.notification_api_url,
+      url: NotificationsEndpoints.RegisterPushToken,
+      method: 'POST',
       data: {
         token,
       }
     });
+
+    return response;
+  }
+
+  async removePushToken(token: string): Promise<null> {
+    const response = notificationServiceRequest({
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      },
+      baseURL: this.config.notification_api_url,
+      url: NotificationsEndpoints.RemovePushToken,
+      method: 'POST',
+      data: {
+        token,
+      }
+    });
+
+    return response;
   }
 
   notificationWebsocketFactory(timeout = 15000): Promise<WebSocket> {
