@@ -95,14 +95,14 @@ class KycService {
             },
         });
     }
-    getKycSummary(provider = '') {
+    getKycSummary(provider = '', accessToken = '') {
         return kycServiceRequest({
             baseURL: this.config.kyc_api_url,
             url: 'tier/view',
             method: 'get',
             params: { exchange: this.exchange, provider },
             headers: {
-                Authorization: `Bearer ${this.accessToken}`
+                Authorization: `Bearer ${accessToken || this.accessToken}`
             }
         });
     }
