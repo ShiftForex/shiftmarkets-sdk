@@ -20,6 +20,7 @@ import {
   WithPagerParams,
   VaultTransactionsQuery,
   VaultTransactionsResponse,
+  VaultRateTier,
 } from "./interfaces";
 import { fieldToBN } from "../common/field-to-bignumber";
 import { fieldToDate } from "../common/field-to-date";
@@ -58,6 +59,10 @@ const prepareProducts = (products: VaultProduct[]) => {
       'minimumAllocationAmount',
       'minimumRedemptionAmount',
       'totalBalance');
+    if (!Array.isArray(product.tiers)) return;
+    product.tiers.forEach((tier: VaultRateTier) => {
+      fieldToBN(tier, 'apr', 'apy', 'tierFrom', 'tierTo');
+    });
   });
   return products
 }
