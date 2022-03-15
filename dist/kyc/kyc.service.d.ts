@@ -12,5 +12,5 @@ export declare class KycService {
     getExtendedProfileSchema(userType: 'personal' | 'company', extra?: string, isUpdate?: boolean, provider?: string, clientUserId?: string): Promise<any>;
     updateUserProfile(payload: UserProfilePayload, userType: 'personal' | 'company', isUpdate?: boolean, provider?: string): Promise<UpdateProfileResponse>;
     submitAgreementSignature(payload: SubmitAgreementDto): Promise<ProviderResponseObject>;
-    getKycSummary(provider?: string): Promise<KycSummary>;
+    getKycSummary(provider?: string, accessToken?: string): Promise<KycSummary>;
 }
