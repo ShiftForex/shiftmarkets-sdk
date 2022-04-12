@@ -60,6 +60,14 @@ class SDKv2 {
             this.config.lending_api_url = config_1.default.staging.lending_api_url;
         }
     }
+    getAccessToken() {
+        try {
+            return this.accessToken || localStorage.getItem('access_token') || undefined;
+        }
+        catch (_a) {
+            return undefined;
+        }
+    }
 }
 exports.SDKv2 = SDKv2;
 apply_mixins_helper_1.applyMixins(SDKv2, [
