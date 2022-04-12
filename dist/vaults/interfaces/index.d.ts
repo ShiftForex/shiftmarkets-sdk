@@ -15,6 +15,12 @@ export interface VaultFarmingAsset {
     details?: any;
     [propName: string]: any;
 }
+export interface VaultRateTier {
+    tierFrom?: BigNumber;
+    tierTo?: BigNumber;
+    apy: BigNumber;
+    apr?: BigNumber;
+}
 export declare type TransactionType = Enums.VaultTypeTransaction.Deposit | Enums.VaultTypeTransaction.Withdraw | Enums.VaultTypeTransaction.Interest;
 export interface VaultBalance {
     companyId?: string;
@@ -77,6 +83,8 @@ export interface VaultProduct {
     updatedAt: Date;
     dailyThresholdDelay?: string;
     dailyThresholdRedemptionLimit?: string;
+    counting: Enums.VaultRateCounting;
+    tiers: VaultRateTier[];
 }
 export interface VaultHistory {
     id: string;
