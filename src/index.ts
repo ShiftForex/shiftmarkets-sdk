@@ -60,14 +60,6 @@ export class SDKv2 {
       this.config.lending_api_url = config.staging.lending_api_url;
     }
   }
-
-  getAccessToken() {
-    try {
-      return this.accessToken || localStorage.getItem('access_token') || undefined;
-    } catch {
-      return undefined;
-    }
-  }
 }
 export interface SDKv2
   extends

@@ -34,7 +34,6 @@ export declare class SDKv2 {
     environment: string;
     useStagingLending: boolean;
     constructor(exchange: string, environment: string, useStagingLending?: boolean);
-    getAccessToken(): string | undefined;
 }
 export interface SDKv2 extends IOrderSummaryCreator, AuthService, ExchangeDataService, WalletIntegrationService, TradeService, NotificationService, KycService, LendingService, SettingsService, WyreService, GeoService {
 }

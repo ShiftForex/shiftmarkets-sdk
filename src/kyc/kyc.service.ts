@@ -65,7 +65,7 @@ export class KycService {
       url: 'schema/openapi',
       method: 'get',
       headers: {
-        Authorization: `Bearer ${this.getAccessToken()}`
+        Authorization: `Bearer ${this.accessToken}`
       },
       params: {
         exchange: this.exchange,
@@ -90,7 +90,7 @@ export class KycService {
       method: 'post',
       data: payload,
       headers: {
-        Authorization: `Bearer ${this.getAccessToken()}`,
+        Authorization: `Bearer ${this.accessToken}`,
       },
       params: {
         exchange: this.exchange,
@@ -109,7 +109,7 @@ export class KycService {
       data: payload,
       params: { exchange: this.exchange },
       headers: {
-        Authorization: `Bearer ${this.getAccessToken()}`
+        Authorization: `Bearer ${this.accessToken}`
       },
     });
   }
@@ -121,7 +121,7 @@ export class KycService {
       method: 'get',
       params: { exchange: this.exchange, provider },
       headers: {
-        Authorization: `Bearer ${accessToken || this.getAccessToken()}`
+        Authorization: `Bearer ${accessToken || this.accessToken}`
       }
     });
   }

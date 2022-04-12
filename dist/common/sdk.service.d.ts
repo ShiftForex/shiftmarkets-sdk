@@ -7,5 +7,4 @@ export interface SdkService {
     exchange: string;
     environment: string;
     config: typeof config.production;
-    getAccessToken: () => string | undefined;
 }
