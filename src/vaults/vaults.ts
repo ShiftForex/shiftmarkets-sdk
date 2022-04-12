@@ -90,7 +90,7 @@ export class LendingService extends SdkService {
    */
   async getLendingTickets(params: LendingTicketsQuery = {}): Promise<LendingTicket[]> {
     const request = this.prepareVaultsGetRequest('tickets', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as LendingTicket[];
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as LendingTicket[];
     response.forEach(ticket => {
       fieldToBN(ticket, 'amount');
     });
@@ -102,7 +102,7 @@ export class LendingService extends SdkService {
    */
   async getLendingTicketsPager(params: WithPagerParams<LendingTicketsQuery> = {}): Promise<WithPager<LendingTicket>> {
     const request = this.prepareVaultsGetRequest('tickets/pagination', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as WithPager<LendingTicket>;
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as WithPager<LendingTicket>;
     response.items.forEach(ticket => {
       fieldToBN(ticket, 'amount');
     });
@@ -114,7 +114,7 @@ export class LendingService extends SdkService {
    */
   async getLendingProducts(params: VaultProductsQuery = {}): Promise<VaultProduct[]> {
     const request = this.prepareVaultsGetRequest('products', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct[];
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as VaultProduct[];
     return prepareProducts(response);
   }
 
@@ -123,7 +123,7 @@ export class LendingService extends SdkService {
    */
   async createLendingProduct(body: CreateVaultProductQuery): Promise<VaultProduct> {
     const request = this.prepareVaultsPostRequest(`products/create`, body);
-    const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct;
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as VaultProduct;
     return prepareProducts([response])[0];
   }
 
@@ -132,7 +132,7 @@ export class LendingService extends SdkService {
    */
   async updateLendingProduct(productId: string, body: UpdateVaultProductQuery = {}): Promise<VaultProduct> {
     const request = this.prepareVaultsPostRequest(`products/update/${productId}`, body, "PUT" as "PUT");
-    const response = await lendingServiceRequest(request, this.accessToken) as VaultProduct;
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as VaultProduct;
     return prepareProducts([response])[0];
   }
 
@@ -141,7 +141,7 @@ export class LendingService extends SdkService {
    */
   async getLendingBalances(params: VaultBalancesQuery = {}): Promise<VaultBalance[]> {
     const request = this.prepareVaultsGetRequest('lending/balances', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as VaultBalance[];
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as VaultBalance[];
     response.forEach(balance => fieldToBN(balance, 'balance'));
     return response;
   }
@@ -151,7 +151,7 @@ export class LendingService extends SdkService {
    */
   async getLendingBalancesPager(params: WithPagerParams<VaultBalancesQuery> = {}): Promise<WithPager<VaultBalance>> {
     const request = this.prepareVaultsGetRequest('lending/balances/pagination', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as WithPager<VaultBalance>;
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as WithPager<VaultBalance>;
     response.items.forEach(balance => fieldToBN(balance, 'balance'));
     return response;
   }
@@ -161,7 +161,7 @@ export class LendingService extends SdkService {
    */
   async getLendingHistory(params: VaultHistoryQuery = {}): Promise<VaultHistory[]> {
     const request = this.prepareVaultsGetRequest('lending/history', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as VaultHistory[];
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as VaultHistory[];
     response.forEach(lending => {
       fieldToBN(lending, 'amount');
       fieldToDate(lending, 'updatedAt');
@@ -175,7 +175,7 @@ export class LendingService extends SdkService {
    */
   async getLendingHistoryPager(params: WithPagerParams<VaultHistoryQuery> = {}): Promise<WithPager<VaultHistory>> {
     const request = this.prepareVaultsGetRequest('lending/history/pagination', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as WithPager<VaultHistory>;
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as WithPager<VaultHistory>;
     response.items.forEach(lending => {
       fieldToBN(lending, 'amount');
       fieldToDate(lending, 'updatedAt');
@@ -189,7 +189,7 @@ export class LendingService extends SdkService {
    */
   async getLendingPendingTransactions(params: VaultPendingTransactionQuery = {}): Promise<VaultPendingTransaction[]> {
     const request = this.prepareVaultsGetRequest('lending/pending-transactions', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as VaultPendingTransaction[];
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as VaultPendingTransaction[];
     response.forEach((pendingTransaction: VaultPendingTransaction) => {
       fieldToBN(pendingTransaction, 'amount');
       fieldToDate(pendingTransaction, 'createdAt');
@@ -200,7 +200,7 @@ export class LendingService extends SdkService {
 
   async getLendingTransactions(params: VaultTransactionsQuery) {
     const request = this.prepareVaultsGetRequest('lending/transactions', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as VaultTransactionsResponse[];
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as VaultTransactionsResponse[];
     response.forEach((tx) => {
       fieldToBN(tx, 'credit');
       fieldToBN(tx, 'debit');
@@ -212,7 +212,7 @@ export class LendingService extends SdkService {
 
   async getLendingTransactionsPager(params: VaultTransactionsQuery) {
     const request = this.prepareVaultsGetRequest('lending/transactions/pagination', params);
-    const response = await lendingServiceRequest(request, this.accessToken) as WithPager<VaultTransactionsResponse>;
+    const response = await lendingServiceRequest(request, this.getAccessToken()) as WithPager<VaultTransactionsResponse>;
     response.items.forEach((tx) => {
       fieldToBN(tx, 'credit');
       fieldToBN(tx, 'debit');
@@ -227,7 +227,7 @@ export class LendingService extends SdkService {
    */
   async redeemLending(body: VaultDepositWithdrawPayload): Promise<VaultDepositWithdrawResponse> {
     const request = this.prepareVaultsPostRequest('lending/redeem', body);
-    const lending = await lendingServiceRequest(request, this.accessToken) as VaultDepositWithdrawResponse;
+    const lending = await lendingServiceRequest(request, this.getAccessToken()) as VaultDepositWithdrawResponse;
     fieldToBN(lending, 'amount');
     fieldToDate(lending, 'updatedAt');
     fieldToDate(lending, 'createdAt');
@@ -239,7 +239,7 @@ export class LendingService extends SdkService {
    */
   async allocateLending(body: VaultDepositWithdrawPayload): Promise<VaultDepositWithdrawResponse> {
     const request = this.prepareVaultsPostRequest('lending/allocate', body);
-    const lending = await lendingServiceRequest(request, this.accessToken) as VaultDepositWithdrawResponse;
+    const lending = await lendingServiceRequest(request, this.getAccessToken()) as VaultDepositWithdrawResponse;
     fieldToBN(lending, 'amount');
     fieldToDate(lending, 'updatedAt');
     fieldToDate(lending, 'createdAt');
