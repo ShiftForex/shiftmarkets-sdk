@@ -31,6 +31,10 @@ export declare class TradeService {
      * @param id
      */
     cancelOrder(id: string): Promise<void>;
+    /**
+    * Cancel all orders for user on exchange
+    */
+    cancelAllOrders(): Promise<any>;
     getOrder(id: string): Promise<Order>;
     getOrderEvents(id: string): Promise<OrderEvent[]>;
     getActivity(filter?: ActivityPagedFilter): Promise<[ActivityTransaction | ActivityOrder]>;

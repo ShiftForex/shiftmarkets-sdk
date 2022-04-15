@@ -84,6 +84,19 @@ class TradeService {
             timeout: 15000,
         });
     }
+    /**
+    * Cancel all orders for user on exchange
+    */
+    async cancelAllOrders() {
+        return (await tradeServiceRequest({
+            url: `${this.config.trade_api_sls_url}/trade/orders/all`,
+            method: "delete",
+            headers: {
+                authorization: `bearer ${this.accessToken}`,
+            },
+            timeout: 15000,
+        }));
+    }
     async getOrder(id) {
         return (await tradeServiceRequest({
             url: `${this.config.trade_api_sls_url}/trade/order/${id}`,
