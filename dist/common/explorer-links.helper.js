@@ -5,7 +5,7 @@ exports.explorerLinks = {
     xlm: 'https://stellar.expert/explorer/public/account',
     eth: 'https://etherscan.io/address',
     btc: 'https://www.blockchain.com/btc/address',
-    algo: 'https://algoexplorer.io',
+    algo: 'https://algoexplorer.io/tx',
 };
 var Networks;
 (function (Networks) {
@@ -21,10 +21,10 @@ exports.getExplorerLink = ({ currency, hash, isErc, network, }) => {
     if (networkFormatted === Networks.Algorand) {
         explorerLink = exports.explorerLinks.algo;
     }
-    if (networkFormatted === Networks.Stellar) {
+    else if (networkFormatted === Networks.Stellar) {
         explorerLink = exports.explorerLinks.xlm;
     }
-    if (networkFormatted === Networks.Erc20
+    else if (networkFormatted === Networks.Erc20
         || networkFormatted === Networks.Ethereum
         || isErc) {
         explorerLink = exports.explorerLinks.eth;
