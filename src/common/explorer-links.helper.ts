@@ -3,7 +3,7 @@ export const explorerLinks: any = {
   xlm: 'https://stellar.expert/explorer/public/account',
   eth: 'https://etherscan.io/address',
   btc: 'https://www.blockchain.com/btc/address',
-  algo: 'https://algoexplorer.io',
+  algo: 'https://algoexplorer.io/tx',
 }
 
 enum Networks {
@@ -34,11 +34,9 @@ export const getExplorerLink = (
 
   if (networkFormatted === Networks.Algorand) {
     explorerLink = explorerLinks.algo;
-  }
-  if (networkFormatted === Networks.Stellar) {
+  } else if (networkFormatted === Networks.Stellar) {
     explorerLink = explorerLinks.xlm;
-  }
-  if (
+  } else if (
     networkFormatted === Networks.Erc20
     || networkFormatted === Networks.Ethereum
     || isErc
