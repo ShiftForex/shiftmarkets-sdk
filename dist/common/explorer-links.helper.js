@@ -12,7 +12,7 @@ var Networks;
     Networks["Stellar"] = "stellar";
     Networks["Erc20"] = "erc-20";
     Networks["Ethereum"] = "Ethereum";
-    Networks["Algorand"] = "Algorand";
+    Networks["Algorand"] = "algorand";
 })(Networks || (Networks = {}));
 exports.getExplorerLink = ({ currency, hash, isErc, network, }) => {
     const addHash = (link, hash) => !!link ? `${link.toLowerCase()}/${hash}` : '';

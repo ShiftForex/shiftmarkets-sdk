@@ -10,7 +10,7 @@ enum Networks {
   Stellar = 'stellar',
   Erc20 = 'erc-20',
   Ethereum = 'Ethereum',
-  Algorand = 'Algorand',
+  Algorand = 'algorand',
 }
 
 export interface ExplorerLinkPayload {
