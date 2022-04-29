@@ -163,7 +163,7 @@ export class LendingService extends SdkService {
     const request = this.prepareVaultsGetRequest('lending/history', params);
     const response = await lendingServiceRequest(request, this.accessToken) as VaultHistory[];
     response.forEach(lending => {
-      fieldToBN(lending, 'amount');
+
       fieldToDate(lending, 'updatedAt');
       fieldToDate(lending, 'createdAt');
     });
