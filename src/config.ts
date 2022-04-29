@@ -27,7 +27,7 @@ export default {
     notification_ws_url:
       "wss://ws.cryptosrvc.com/events",
     notification_api_url:
-      "https://3b5hneboa4.execute-api.us-east-1.amazonaws.com",
+      "https://qaak7tf0y0.execute-api.us-east-1.amazonaws.com",
     kyc_api_url: "https://sandbox.shiftmarkets.com/v2/kyc",
     settings_api_url: "https://sandbox.shiftmarkets.com/user-settings",
     lending_api_url: "https://lending-service.cryptosrvc-staging.com/v1",
