@@ -26,7 +26,7 @@ exports.default = {
         trade_api_sls_url: "https://trade-service-sls.cryptosrvc.com/v1",
         rfq_sls_url: "https://rfq.cryptosrvc.com/v1",
         notification_ws_url: "wss://ws.cryptosrvc.com/events",
-        notification_api_url: "https://3b5hneboa4.execute-api.us-east-1.amazonaws.com",
+        notification_api_url: "https://qaak7tf0y0.execute-api.us-east-1.amazonaws.com",
         kyc_api_url: "https://sandbox.shiftmarkets.com/v2/kyc",
         settings_api_url: "https://sandbox.shiftmarkets.com/user-settings",
         lending_api_url: "https://lending-service.cryptosrvc-staging.com/v1",
