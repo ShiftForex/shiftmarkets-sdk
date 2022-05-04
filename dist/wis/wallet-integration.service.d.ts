@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { SdkService } from "../common/sdk.service";
-import { Transaction, TransactionPagedFilter, TransactionPagedHistory } from "./interfaces/transaction.interface";
+import { Transaction, TransactionPagedFilter, TransactionPagedHistory, CreateTransactionData } from "./interfaces/transaction.interface";
 export interface SchemaItem {
     id: string;
     title: string;
@@ -56,23 +56,16 @@ export declare function walletIntegrationServiceRequest(request: AxiosRequestCon
 export declare class WalletIntegrationService {
     /**
      * Create withdraw request on Wallet Integration Service
-     * @param product
-     * @param amount
-     * @param address
-     * @param schemaName
-     * @param schemaData
-     * @param code
+     * @param data
+     * @param additionalHeaders
      */
-    createWithdraw(product: string, amount: number, address?: string, schemaName?: string, schemaData?: any, code?: string, psp?: string, webhookUrl?: string, additionalHeaders?: HeadersItem): Promise<Transaction>;
+    createWithdraw(data: CreateTransactionData, additionalHeaders?: HeadersItem): Promise<Transaction>;
     /**
      * Create deposit request on Wallet Integration Service
-     * @param product
-     * @param amount
-     * @param schemaName
-     * @param schemaData
-     * @param code
+     * @param data
+     * @param additionalHeaders
      */
-    createDeposit(product: string, amount: number, schemaName?: string, schemaData?: any, code?: string, psp?: string, webhookUrl?: string, additionalHeaders?: HeadersItem): Promise<Transaction>;
+    createDeposit(data: CreateTransactionData, additionalHeaders?: HeadersItem): Promise<Transaction>;
     /**
      * Get wallet transaction by id
      * @param txid

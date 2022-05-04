@@ -48,7 +48,7 @@ class KycService {
             params: { exchange: this.exchange },
         });
     }
-    getExtendedProfileSchema(userType, extra = '', isUpdate, provider = '') {
+    getExtendedProfileSchema(userType, extra = '', isUpdate, provider = '', clientUserId = '') {
         return kycServiceRequest({
             baseURL: this.config.kyc_api_url,
             url: 'schema/openapi',
@@ -62,10 +62,11 @@ class KycService {
                 extra,
                 isUpdate,
                 provider,
+                clientUserId,
             },
         });
     }
-    updateUserProfile(payload, userType, isUpdate = false) {
+    updateUserProfile(payload, userType, isUpdate = false, provider = '') {
         return kycServiceRequest({
             baseURL: this.config.kyc_api_url,
             url: 'input/schemaform',
@@ -78,6 +79,7 @@ class KycService {
                 exchange: this.exchange,
                 userType,
                 isUpdate,
+                provider,
             },
         });
     }
@@ -93,14 +95,14 @@ class KycService {
             },
         });
     }
-    getKycSummary() {
+    getKycSummary(provider = '', accessToken = '') {
         return kycServiceRequest({
             baseURL: this.config.kyc_api_url,
             url: 'tier/view',
             method: 'get',
-            params: { exchange: this.exchange },
+            params: { exchange: this.exchange, provider },
             headers: {
-                Authorization: `Bearer ${this.accessToken}`
+                Authorization: `Bearer ${accessToken || this.accessToken}`
             }
         });
     }

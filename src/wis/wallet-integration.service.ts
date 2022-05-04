@@ -5,6 +5,7 @@ import {
   Transaction,
   TransactionPagedFilter,
   TransactionPagedHistory,
+  CreateTransactionData,
 } from "./interfaces/transaction.interface";
 import { TransactionDto } from "./dto/transaction.dto";
 
@@ -87,24 +88,24 @@ export async function walletIntegrationServiceRequest(
 export class WalletIntegrationService {
   /**
    * Create withdraw request on Wallet Integration Service
-   * @param product
-   * @param amount
-   * @param address
-   * @param schemaName
-   * @param schemaData
-   * @param code
+   * @param data
+   * @param additionalHeaders
    */
   async createWithdraw(
-    product: string,
-    amount: number,
-    address?: string,
-    schemaName?: string,
-    schemaData?: any,
-    code?: string,
-    psp?: string,
-    webhookUrl?: string,
+    data: CreateTransactionData,
     additionalHeaders?: HeadersItem,
   ): Promise<Transaction> {
+    const {
+      product,
+      amount,
+      address,
+      code,
+      schemaName,
+      schemaData,
+      psp,
+      network,
+      webhookUrl,
+    } = data;
     const trx = (await walletIntegrationServiceRequest({
       url: `${this.config.wis_api_url}/withdraw/create`,
       method: "post",
@@ -121,6 +122,7 @@ export class WalletIntegrationService {
         schemaName,
         schemaData,
         psp,
+        network,
         webhook_url: webhookUrl,
       },
     })) as TransactionDto;
@@ -129,22 +131,23 @@ export class WalletIntegrationService {
 
   /**
    * Create deposit request on Wallet Integration Service
-   * @param product
-   * @param amount
-   * @param schemaName
-   * @param schemaData
-   * @param code
+   * @param data
+   * @param additionalHeaders
    */
   async createDeposit(
-    product: string,
-    amount: number,
-    schemaName?: string,
-    schemaData?: any,
-    code?: string,
-    psp?: string,
-    webhookUrl?: string,
+    data: CreateTransactionData,
     additionalHeaders?: HeadersItem,
   ): Promise<Transaction> {
+    const {
+      product,
+      amount,
+      code,
+      schemaName,
+      schemaData,
+      psp,
+      network,
+      webhookUrl,
+    } = data;
     const trx = (await walletIntegrationServiceRequest({
       url: `${this.config.wis_api_url}/deposit/create`,
       method: "post",
@@ -160,6 +163,7 @@ export class WalletIntegrationService {
         schemaName,
         schemaData,
         psp,
+        network,
         webhook_url: webhookUrl,
       },
     })) as TransactionDto;

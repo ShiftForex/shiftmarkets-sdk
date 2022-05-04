@@ -50,3 +50,15 @@ export interface TransactionPagedHistory {
   pager_offset: number;
   pager_total_rows: number;
 }
+
+export interface CreateTransactionData {
+  product: string,
+  amount: number,
+  address?: string,
+  schemaName?: string,
+  schemaData?: any,
+  code?: string,
+  psp?: string,
+  network?: string,
+  webhookUrl?: string,
+}

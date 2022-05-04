@@ -46,6 +46,7 @@ class OrderSummary {
         this.summary.quoteDecimals = orderSummary.quoteDecimals || defaultQuoteDecimals;
         this.summary.baseDecimals = orderSummary.baseDecimals || defaultBaseDecimals;
         this.summary.currentProduct = orderSummary.currentProduct;
+        this.summary.takerReserveMultiplier = Number(orderSummary.takerReserveMultiplier || 1);
         this._setProductsAndDecimals();
     }
     getLimitPrice(qty = 0) {
@@ -119,6 +120,7 @@ class OrderSummary {
             netProduct: this.summary.netProduct,
             amountProduct: this.summary.amountProduct,
             currentProduct: this.summary.currentProduct,
+            withTrm: Number(this.summary.calculatedNet) / this.summary.takerReserveMultiplier,
             isQuote,
         };
     }

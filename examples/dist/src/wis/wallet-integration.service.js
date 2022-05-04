@@ -27,19 +27,17 @@ exports.walletIntegrationServiceRequest = walletIntegrationServiceRequest;
 class WalletIntegrationService {
     /**
      * Create withdraw request on Wallet Integration Service
-     * @param product
-     * @param amount
-     * @param address
-     * @param schemaName
-     * @param schemaData
-     * @param code
+     * @param data
+     * @param additionalHeaders
      */
-    async createWithdraw(product, amount, address, schemaName, schemaData, code, psp, webhookUrl) {
+    async createWithdraw(data, additionalHeaders) {
+        const { product, amount, address, code, schemaName, schemaData, psp, network, webhookUrl, } = data;
         const trx = (await walletIntegrationServiceRequest({
             url: `${this.config.wis_api_url}/withdraw/create`,
             method: "post",
             headers: {
                 Authorization: `Bearer ${this.accessToken}`,
+                ...additionalHeaders,
             },
             data: {
                 exchange: this.exchange,
@@ -50,6 +48,7 @@ class WalletIntegrationService {
                 schemaName,
                 schemaData,
                 psp,
+                network,
                 webhook_url: webhookUrl,
             },
         }));
@@ -57,18 +56,17 @@ class WalletIntegrationService {
     }
     /**
      * Create deposit request on Wallet Integration Service
-     * @param product
-     * @param amount
-     * @param schemaName
-     * @param schemaData
-     * @param code
+     * @param data
+     * @param additionalHeaders
      */
-    async createDeposit(product, amount, schemaName, schemaData, code, psp, webhookUrl) {
+    async createDeposit(data, additionalHeaders) {
+        const { product, amount, code, schemaName, schemaData, psp, network, webhookUrl, } = data;
         const trx = (await walletIntegrationServiceRequest({
             url: `${this.config.wis_api_url}/deposit/create`,
             method: "post",
             headers: {
                 Authorization: `Bearer ${this.accessToken}`,
+                ...additionalHeaders,
             },
             data: {
                 exchange: this.exchange,
@@ -78,6 +76,7 @@ class WalletIntegrationService {
                 schemaName,
                 schemaData,
                 psp,
+                network,
                 webhook_url: webhookUrl,
             },
         }));
@@ -151,7 +150,7 @@ class WalletIntegrationService {
     /**
      * Get payment options
      */
-    async getPaymentRoutes(all) {
+    async getPaymentRoutes(all, is_development) {
         const response = (await walletIntegrationServiceRequest({
             url: `${this.config.wis_api_url}/payment/routes`,
             method: "get",
@@ -161,6 +160,7 @@ class WalletIntegrationService {
             params: {
                 exchange: this.exchange,
                 all: all ? "1" : "",
+                is_development: is_development ? "1" : "",
             },
         }));
         return response;
