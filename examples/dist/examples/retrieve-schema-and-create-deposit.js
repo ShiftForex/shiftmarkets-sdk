@@ -11,7 +11,13 @@ const src_1 = require("../src");
     // Set corresponding user data from form related to the schema
     const schemaData = { email: "test@gmail.com" };
     // Create deposit request and wait till it will be completed/failed
-    let depositTransaction = await sdk.createDeposit("BTC", 0.001, "Sell", schemaData);
+    const data = {
+        product: "BTC",
+        amount: 0.001,
+        schemaName: "Sell",
+        schemaData,
+    };
+    let depositTransaction = await sdk.createDeposit(data);
     while (!depositTransaction.iframe_url && depositTransaction.success) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const { txid, state_hash } = depositTransaction;

@@ -20,14 +20,16 @@ import { SDKv2 } from "../src";
   const schemaData = { email: "test@gmail.com" };
 
   // Create deposit request for payment provider named TEST and wait till it will be completed/failed
-  let depositTransaction = await sdk.createDeposit(
-    "BTC",
-    0.001,
-    "Sell",
+  const data = {
+    product: "BTC",
+    amount: 0.001,
+    schemaName: "Sell",
     schemaData,
-    undefined,
-    "TEST"
-  );
+    code: undefined,
+    psp: "TEST",
+  };
+
+  let depositTransaction = await sdk.createDeposit(data);
   while (!depositTransaction.iframe_url && depositTransaction.success) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const { txid, state_hash } = depositTransaction;

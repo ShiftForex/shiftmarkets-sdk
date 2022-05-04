@@ -15,7 +15,11 @@ test("sdk.login", async () => {
     sdk.accessToken = tokens.client_access_token;
 });
 test("sdk.createDeposit", async () => {
-    const result = await sdk.createDeposit("USD", 10);
+    const data = {
+        product: "USD",
+        amount: 10,
+    };
+    const result = await sdk.createDeposit(data);
     // console.log(result);
 });
 test("sdk.getPaymentRoutes", async () => {

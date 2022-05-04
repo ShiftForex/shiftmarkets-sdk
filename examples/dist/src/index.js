@@ -21,6 +21,8 @@ const kyc_service_1 = require("./kyc/kyc.service");
 const trade_service_1 = require("./trade/trade.service");
 const notification_service_1 = require("./notification/notification.service");
 const settings_service_1 = require("./settings/settings-service");
+const geo_service_1 = require("./geo/geo.service");
+const wyreService_1 = require("./wyre/wyreService");
 const vaults_1 = require("./vaults/vaults");
 const apply_mixins_helper_1 = require("./common/apply-mixins.helper");
 const order_summary_1 = require("./order-summary");
@@ -31,8 +33,11 @@ var notification_events_1 = require("./notification/notification-events");
 Object.defineProperty(exports, "NotificationEvents", { enumerable: true, get: function () { return notification_events_1.NotificationEvents; } });
 var ticker_1 = require("./ticker/ticker");
 Object.defineProperty(exports, "Ticker", { enumerable: true, get: function () { return ticker_1.Ticker; } });
+var quotes_all_1 = require("./ticker/quotes-all");
+Object.defineProperty(exports, "QuotesAll", { enumerable: true, get: function () { return quotes_all_1.QuotesAll; } });
 var chart_1 = require("./chart/chart");
 Object.defineProperty(exports, "Chart", { enumerable: true, get: function () { return chart_1.Chart; } });
+__exportStar(require("./common/explorer-links.helper"), exports);
 __exportStar(require("./trade/interfaces"), exports);
 __exportStar(require("./kyc/interfaces"), exports);
 __exportStar(require("./vaults/interfaces"), exports);
@@ -42,14 +47,18 @@ Object.defineProperty(exports, "OrderHelper", { enumerable: true, get: function 
 var order_summary_2 = require("./order-summary");
 Object.defineProperty(exports, "OrderSummaryCreator", { enumerable: true, get: function () { return order_summary_2.OrderSummaryCreator; } });
 class SDKv2 {
-    constructor(exchange, environment) {
+    constructor(exchange, environment, useStagingLending = false) {
         this.exchange = exchange;
         this.environment = environment;
+        this.useStagingLending = useStagingLending;
         this.environment = this.environment.toLowerCase();
         if (!config_1.default[this.environment]) {
             throw new Error(`Unknown environment ${this.environment}`);
         }
         this.config = config_1.default[this.environment];
+        if (useStagingLending) {
+            this.config.lending_api_url = config_1.default.staging.lending_api_url;
+        }
     }
 }
 exports.SDKv2 = SDKv2;
@@ -63,4 +72,6 @@ apply_mixins_helper_1.applyMixins(SDKv2, [
     kyc_service_1.KycService,
     vaults_1.LendingService,
     settings_service_1.SettingsService,
+    wyreService_1.WyreService,
+    geo_service_1.GeoService,
 ]);

@@ -12,7 +12,14 @@ const src_1 = require("../src");
     const schemaData = { email: "test@gmail.com", phone: "311499212" };
     // Create withdraw request and wait till it will be completed/failed
     const btcAddress = "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy";
-    let withdrawTransaction = await sdk.createWithdraw("BTC", 0.001, btcAddress, "Sell", schemaData);
+    const data = {
+        product: "BTC",
+        amount: 0.001,
+        btcAddress,
+        schemaName: "Sell",
+        schemaData,
+    };
+    let withdrawTransaction = await sdk.createWithdraw(data);
     while (!withdrawTransaction.iframe_url && withdrawTransaction.success) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const { txid, state_hash } = withdrawTransaction;
