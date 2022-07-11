@@ -86,7 +86,7 @@ export class TradeService {
         authorization: `bearer ${this.accessToken}`,
       },
       data: createOrder,
-      timeout: 15000,
+      timeout: 30000,
     });
   }
 
