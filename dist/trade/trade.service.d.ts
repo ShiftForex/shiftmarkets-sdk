@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { SdkService } from "../common/sdk.service";
-import { Order, OrderSide, OrderPagedFilter, MarketOrdersQc, InstantBuy, RfqQuote, GetRfqQuotesDto, RfqQuotes, RfqTrade, RfqTrades, InstantBuysDto, ActivityOrder, ActivityTransaction, ActivityPagedFilter, TradePager, MarketOrdersQcDto, InstantBuyEstimate, GetAccountTransactionsDto, AccountTransactions, OrderPagedFilterCsv, GetAccountTransactionsDtoCsv, ActivityPagedFilterCsv } from "./interfaces";
+import { Order, OrderSide, OrderPagedFilter, MarketOrdersQc, InstantBuy, RfqQuote, GetRfqQuotesDto, RfqQuotes, RfqTrade, RfqTrades, InstantBuysDto, ActivityOrder, ActivityTransaction, ActivityPagedFilter, TradePager, MarketOrdersQcDto, InstantBuyEstimate, GetAccountTransactionsDto, AccountTransactions, OrderPagedFilterCsv, GetAccountTransactionsDtoCsv, ActivityPagedFilterCsv, Account } from "./interfaces";
 import { OrderEvent } from "./interfaces/order-event.interface";
 import { CreateOrder } from "./interfaces/create-order.interface";
 import { CreateInstantBuy } from "./interfaces/create-instant.buy";

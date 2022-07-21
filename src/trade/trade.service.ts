@@ -27,6 +27,7 @@ import {
   OrderPagedFilterCsv,
   GetAccountTransactionsDtoCsv,
   ActivityPagedFilterCsv,
+  Account,
 } from "./interfaces";
 import * as querystring from "querystring";
 import { OrderEvent } from "./interfaces/order-event.interface";
