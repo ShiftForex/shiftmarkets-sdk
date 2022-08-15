@@ -6,6 +6,7 @@ import { SignupDto } from "./dto/signup.dto";
 import { RefreshAccessTokenDto } from "./dto/refresh-access-token.dto";
 import { UserAttribute } from "./dto/user-attributes.dto";
 import { MfaSettingsDto } from "./dto/mfa-settings.dto";
+import { RemoveAccountDto, PreferedMfaSettings } from "./dto/remove-account.dto";
 
 const debug = debugFactory("ClientSDK:AuthService");
 
@@ -90,6 +91,29 @@ export class AuthService {
       data: {
         exchange: this.exchange,
         refreshToken,
+      },
+      timeout: 15000,
+    });
+
+    if (!response.result || response.result == "error") {
+      throw new AuthServiceError(response.message);
+    }
+    return response;
+  }
+
+  /**
+   * Account removal
+   * @param twoFaCode
+   */
+  async removeUserAccount(twoFaCode: string): Promise<RemoveAccountDto> {
+    const response = await authServiceRequest({
+      url: `${this.config.auth_api_url}/user_authentication/removeUserData`,
+      method: "post",
+      data: {
+        exchange: this.exchange,
+        client_token: this.accessToken,
+        code: twoFaCode,
+        twoFAMethod: PreferedMfaSettings.TwoFaCode,
       },
       timeout: 15000,
     });
@@ -273,7 +297,9 @@ export class AuthService {
   /**
    * Get user preferred MFA settings
    */
-  async getUserMfaSettings(optionalAccessToken?: string): Promise<MfaSettingsDto> {
+  async getUserMfaSettings(
+    optionalAccessToken?: string
+  ): Promise<MfaSettingsDto> {
     const response = await authServiceRequest({
       url: `${this.config.auth_api_url}/user_authentication/getUserMfaSettings`,
       method: "post",
@@ -317,7 +343,9 @@ export class AuthService {
   /**
    * Get user TOTP secret
    */
-  async getTotpSecret(optionalAccessToken?: string): Promise<string | undefined> {
+  async getTotpSecret(
+    optionalAccessToken?: string
+  ): Promise<string | undefined> {
     const response = await authServiceRequest({
       url: `${this.config.auth_api_url}/user_authentication/requestTOTPSetupCode`,
       method: "post",
