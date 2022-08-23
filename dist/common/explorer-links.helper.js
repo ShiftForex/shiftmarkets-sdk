@@ -6,6 +6,7 @@ exports.explorerLinks = {
     eth: 'https://etherscan.io/address',
     btc: 'https://www.blockchain.com/btc/address',
     algo: 'https://algoexplorer.io/tx',
+    hbar: 'https://app.dragonglass.me/hedera/transactions',
 };
 var Networks;
 (function (Networks) {
@@ -14,10 +15,15 @@ var Networks;
     Networks["Ethereum"] = "Ethereum";
     Networks["Algorand"] = "algorand";
 })(Networks || (Networks = {}));
+var Currencies;
+(function (Currencies) {
+    Currencies["Hbar"] = "hbar";
+})(Currencies || (Currencies = {}));
 exports.getExplorerLink = ({ currency, hash, isErc, network, }) => {
-    const addHash = (link, hash) => !!link ? `${link.toLowerCase()}/${hash}` : '';
+    const addHash = (link, hash) => !!link ? `${link.toLowerCase()}/${hashFormatted(hash)}` : '';
     let explorerLink = exports.explorerLinks[currency];
     const networkFormatted = network;
+    const hashFormatted = (currentHash) => (currency === Currencies.Hbar ? currentHash.replace(/[^\d]/g, '') : currentHash);
     if (networkFormatted === Networks.Algorand) {
         explorerLink = exports.explorerLinks.algo;
     }
@@ -26,7 +32,7 @@ exports.getExplorerLink = ({ currency, hash, isErc, network, }) => {
     }
     else if (networkFormatted === Networks.Erc20
         || networkFormatted === Networks.Ethereum
-        || isErc) {
+        || isErc && !explorerLink) {
         explorerLink = exports.explorerLinks.eth;
     }
     return addHash(explorerLink, hash);

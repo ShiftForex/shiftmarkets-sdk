@@ -4,6 +4,7 @@ export const explorerLinks: any = {
   eth: 'https://etherscan.io/address',
   btc: 'https://www.blockchain.com/btc/address',
   algo: 'https://algoexplorer.io/tx',
+  hbar: 'https://app.dragonglass.me/hedera/transactions',
 }
 
 enum Networks {
@@ -11,6 +12,10 @@ enum Networks {
   Erc20 = 'erc-20',
   Ethereum = 'Ethereum',
   Algorand = 'algorand',
+}
+
+enum Currencies {
+  Hbar = 'hbar',
 }
 
 export interface ExplorerLinkPayload {
@@ -28,9 +33,13 @@ export const getExplorerLink = (
     network,
   }: ExplorerLinkPayload
 ): string => {
-  const addHash = (link: string, hash: string) => !!link ? `${link.toLowerCase()}/${hash}` : '';
+  const addHash = (link: string, hash: string) => !!link ? `${link.toLowerCase()}/${hashFormatted(hash)}` : '';
   let explorerLink = explorerLinks[currency];
   const networkFormatted = network;
+
+  const hashFormatted = (currentHash: string) => (
+    currency === Currencies.Hbar ? currentHash.replace(/[^\d]/g, '') : currentHash
+  );
 
   if (networkFormatted === Networks.Algorand) {
     explorerLink = explorerLinks.algo;
@@ -39,10 +48,10 @@ export const getExplorerLink = (
   } else if (
     networkFormatted === Networks.Erc20
     || networkFormatted === Networks.Ethereum
-    || isErc
+    || isErc && !explorerLink
   ) {
     explorerLink = explorerLinks.eth;
   }
 
   return addHash(explorerLink, hash);
-}
+};
