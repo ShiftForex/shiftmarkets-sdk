@@ -15,15 +15,10 @@ var Networks;
     Networks["Ethereum"] = "Ethereum";
     Networks["Algorand"] = "algorand";
 })(Networks || (Networks = {}));
-var Currencies;
-(function (Currencies) {
-    Currencies["Hbar"] = "hbar";
-})(Currencies || (Currencies = {}));
 exports.getExplorerLink = ({ currency, hash, isErc, network, }) => {
-    const addHash = (link, hash) => !!link ? `${link.toLowerCase()}/${hashFormatted(hash)}` : '';
+    const addHash = (link, hash) => !!link ? `${link.toLowerCase()}/${hash}` : '';
     let explorerLink = exports.explorerLinks[currency];
     const networkFormatted = network;
-    const hashFormatted = (currentHash) => (currency === Currencies.Hbar ? currentHash.replace(/[^\d]/g, '') : currentHash);
     if (networkFormatted === Networks.Algorand) {
         explorerLink = exports.explorerLinks.algo;
     }

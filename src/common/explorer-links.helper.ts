@@ -14,10 +14,6 @@ enum Networks {
   Algorand = 'algorand',
 }
 
-enum Currencies {
-  Hbar = 'hbar',
-}
-
 export interface ExplorerLinkPayload {
   currency: string,
   hash: string,
@@ -33,13 +29,9 @@ export const getExplorerLink = (
     network,
   }: ExplorerLinkPayload
 ): string => {
-  const addHash = (link: string, hash: string) => !!link ? `${link.toLowerCase()}/${hashFormatted(hash)}` : '';
+  const addHash = (link: string, hash: string) => !!link ? `${link.toLowerCase()}/${hash}` : '';
   let explorerLink = explorerLinks[currency];
   const networkFormatted = network;
-
-  const hashFormatted = (currentHash: string) => (
-    currency === Currencies.Hbar ? currentHash.replace(/[^\d]/g, '') : currentHash
-  );
 
   if (networkFormatted === Networks.Algorand) {
     explorerLink = explorerLinks.algo;
