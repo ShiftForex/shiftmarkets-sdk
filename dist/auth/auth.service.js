@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = exports.authServiceRequest = exports.AuthServiceError = void 0;
 const debug_1 = __importDefault(require("debug"));
 const axios_1 = __importDefault(require("axios"));
+const remove_account_dto_1 = require("./dto/remove-account.dto");
 const debug = debug_1.default("ClientSDK:AuthService");
 class AuthServiceError extends Error {
 }
@@ -78,6 +79,27 @@ class AuthService {
             data: {
                 exchange: this.exchange,
                 refreshToken,
+            },
+            timeout: 15000,
+        });
+        if (!response.result || response.result == "error") {
+            throw new AuthServiceError(response.message);
+        }
+        return response;
+    }
+    /**
+     * Account removal
+     * @param twoFaCode
+     */
+    async removeUserAccount(twoFaCode) {
+        const response = await authServiceRequest({
+            url: `${this.config.auth_api_url}/user_authentication/removeUserData`,
+            method: "post",
+            data: {
+                exchange: this.exchange,
+                client_token: this.accessToken,
+                code: twoFaCode,
+                twoFAMethod: remove_account_dto_1.PreferedMfaSettings.TwoFaCode,
             },
             timeout: 15000,
         });

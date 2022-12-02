@@ -5,6 +5,7 @@ import { SignupDto } from "./dto/signup.dto";
 import { RefreshAccessTokenDto } from "./dto/refresh-access-token.dto";
 import { UserAttribute } from "./dto/user-attributes.dto";
 import { MfaSettingsDto } from "./dto/mfa-settings.dto";
+import { RemoveAccountDto } from "./dto/remove-account.dto";
 export declare class AuthServiceError extends Error {
 }
 export declare function authServiceRequest(request: AxiosRequestConfig): Promise<any>;
@@ -25,6 +26,11 @@ export declare class AuthService {
      * @param refreshToken
      */
     refreshAccessToken(refreshToken: string): Promise<RefreshAccessTokenDto>;
+    /**
+     * Account removal
+     * @param twoFaCode
+     */
+    removeUserAccount(twoFaCode: string): Promise<RemoveAccountDto>;
     /**
      * New user signup (registration)
      * @param username
